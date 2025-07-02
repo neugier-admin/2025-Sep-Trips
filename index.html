@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的大阪之旅 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chosen Palette: Calm Blue & Neutral Gray -->
+    <!-- Application Structure Plan: The application is a two-layer single-page app (SPA). The main page acts as a dashboard, offering a high-level overview of the trip (daily themes) and a task-oriented "Foodie Checklist". This encourages exploration without overwhelming the user. Clicking a day card drills down into a detailed timeline view, which slides in from the right—a common and intuitive mobile navigation pattern. This layered structure presents information contextually, making it highly usable on the go. -->
+    <!-- Visualization & Content Choices: The source report is a detailed travel itinerary. The goal is organization, quick access to information, and task management. 
+        - Daily Itinerary -> Goal: Organize/Inform. Method: Clickable Cards (HTML/Tailwind). Interaction: Tap to drill-down. Justification: Provides a scannable, high-level summary. Cards are an excellent touch target for mobile users.
+        - Detailed Timeline -> Goal: Organize/Inform. Method: Vertical Timeline (HTML/Tailwind). Interaction: Scroll, click map links. Justification: Chronological presentation is the most intuitive way to view a schedule. Integrating actionable transport info and map links directly into each step makes the app a practical tool.
+        - Foodie Checklist -> Goal: Organize/Task Management. Method: Interactive Checklist (HTML/JS). Interaction: Check off items, click map links. Justification: Turns a simple list into a useful, satisfying tool for tracking culinary experiences.
+        - Library/Method: All elements are implemented using HTML, Tailwind CSS, and Vanilla JavaScript for a lightweight and fast experience. Icons are from the Lucide library. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 1.25rem;
+            top: 1.75rem;
+            bottom: -1.75rem;
+            width: 2px;
+            background-color: #e5e7eb; 
+        }
+        .timeline-item:last-child::before {
+            display: none;
+        }
+        .page {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .page-hidden {
+            transform: translateX(100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div id="app-container" class="relative min-h-screen w-full max-w-lg mx-auto bg-white overflow-x-hidden shadow-2xl">
+
+        <!-- Main Page -->
+        <div id="main-page" class="page absolute inset-0 p-6 pt-20">
+            <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-lg bg-white/80 backdrop-blur-sm z-20 px-6 py-4 border-b border-gray-200">
+                <h1 id="main-title" class="text-2xl font-bold text-center text-gray-900"></h1>
+            </header>
+            
+            <main class="space-y-8">
+                <section id="itinerary-cards" class="space-y-4"></section>
+                <section>
+                    <h2 class="text-xl font-bold mb-4 text-gray-900">我的美食清單</h2>
+                    <div id="foodie-list" class="space-y-3"></div>
+                </section>
+            </main>
+        </div>
+
+        <!-- Detail Page -->
+        <div id="detail-page" class="page page-hidden absolute inset-0 bg-white z-30 flex flex-col">
+            <header class="flex-shrink-0 flex items-center bg-white/80 backdrop-blur-sm z-20 px-4 py-4 border-b border-gray-200">
+                <button id="back-button" class="p-2 rounded-full hover:bg-gray-100">
+                    <i data-lucide="arrow-left" class="w-6 h-6 text-gray-700"></i>
+                </button>
+                <h2 id="detail-title" class="text-lg font-bold text-center text-gray-900 flex-grow truncate px-2"></h2>
+            </header>
+            <div id="detail-content" class="flex-grow overflow-y-auto p-6"></div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DATA SOURCE ---
+            const tripData = {
+              "tripTitle": "我們的九月大阪體驗之旅 2025",
+              "baseLocation": "難波 (Namba)",
+              "itinerary": [
+                {
+                  "day": 1,
+                  "date": "2025-09-13",
+                  "theme": "祭典的震撼與大阪的脈動 (日期需為2025年重新確認)",
+                  "activities": [
+                    {"time": "上午", "title": "抵達大阪", "description": "抵達關西機場，辦理手續，購買交通票券後前往難波。", "transport": "從關西機場 (KIX) 搭乘南海電鐵 (Nankai Railway) 前往『南海難波站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Kansai+International+Airport"},
+                    {"time": "下午", "title": "岸和田だんじり祭", "description": "感受日本最熱血的祭典之一，觀看勇壯的地車在街道上飛馳。 (請務必確認2025年活動日期)", "transport": "從『南海難波站』搭乘南海本線前往『岸和田站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Kishiwada+Station"},
+                    {"time": "傍晚", "title": "返回難波與晚餐", "description": "返回難波，在酒店稍作休息後，於心齋橋或道頓堀一帶享用晚餐。", "transport": "從『岸和田站』搭乘南海本線返回『南海難波站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Dotonbori+Osaka"}
+                  ]
+                },
+                {
+                  "day": 2,
+                  "date": "2025-09-14",
+                  "theme": "搖滾之夜與長居的活力 (日期需為2025年重新確認)",
+                  "activities": [
+                    {"time": "上午", "title": "難波周邊散策", "description": "在酒店附近隨意逛逛，可以先到黑門市場品嚐新鮮的海產和地道小食，感受當地的生活氣息。", "transport": "從酒店步行前往。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Kuromon+Ichiba+Market"},
+                    {"time": "下午", "title": "演唱會前準備", "description": "在難波周邊的商場逛街購物，購買演唱會應援物或稍作休息。", "transport": "步行。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Namba+Parks"},
+                    {"time": "傍晚", "title": "ONE OK ROCK 演唱會", "description": "前往長居公園，準備入場，享受一場熱血沸騰的搖滾演唱會。 (請務必確認2025年活動日期與地點)", "transport": "從 Osaka Metro『難波站』搭乘御堂筋線 (Midosuji Line) 前往『長居站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Yanmar+Stadium+Nagai"}
+                  ]
+                },
+                {
+                  "day": 3,
+                  "date": "2025-09-15",
+                  "theme": "大阪購物血拼日",
+                  "activities": [
+                    {"time": "上午", "title": "心齋橋筋 & 美國村", "description": "在心齋橋筋的藥妝店和百貨公司盡情購物，再去充滿個性的美國村尋寶。", "transport": "從酒店步行前往。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Shinsaibashi-suji"},
+                    {"time": "下午", "title": "前進梅田購物區", "description": "搭乘地鐵前往大阪的另一個中心——梅田，逛逛阪急、大丸等大型百貨公司。", "transport": "從 Osaka Metro『難波站』搭乘御堂筋線前往『梅田站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Umeda+Station"},
+                    {"time": "傍晚", "title": "梅田晚餐與夜景", "description": "在梅田享用晚餐後，可以考慮登上梅田藍天大廈看夜景，之後返回難波。", "transport": "從『梅田站』搭乘御堂筋線返回『難波站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Umeda+Sky+Building"}
+                  ]
+                },
+                {
+                  "day": 4,
+                  "date": "2025-09-16",
+                  "theme": "未來初體驗：大阪萬博 EXPO 2025",
+                  "activities": [
+                    {"time": "上午", "title": "前往夢洲會場 & 入場", "description": "從難波出發，搭乘地鐵前往萬博會場，準備迎接未來的衝擊。", "transport": "從 Osaka Metro『難波站』搭乘御堂筋線到『本町站』，轉乘中央線前往『夢洲站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Yumeshima+Station+Osaka"},
+                    {"time": "下午", "title": "探索主題展館", "description": "參觀感興趣的國家館或主題館，例如『未來社會的試驗場』，體驗尖端科技。", "transport": "園區內步行或搭乘接駁車。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Expo+2025+Osaka"},
+                    {"time": "傍晚", "title": "夜間光影秀與返回", "description": "欣賞園區夜間的燈光藝術與表演，之後搭乘地鐵返回難波。", "transport": "從『夢洲站』搭乘地鐵返回難波。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Yumeshima+Station+Osaka"}
+                  ]
+                },
+                {
+                  "day": 5,
+                  "date": "2025-09-17",
+                  "theme": "魔法與冒險：USJ特攻作戰",
+                  "activities": [
+                    {"time": "清晨 (7:00)", "title": "提早出發，搶佔先機", "description": "預計7點到達USJ門口排隊，開園後第一時間衝去排『SPY x FAMILY 秘密任務 4D』。", "transport": "從『大阪難波站』搭乘阪神難波線到『西九条站』，再轉乘JR櫻島線到『環球影城站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Universal+Studios+Japan"},
+                    {"time": "11:10 - 12:10", "title": "Express Pass: 超級任天堂世界™", "description": "根據Express Pass時間準時進入園區！先玩 11:10-11:40 的「瑪利歐賽車」，再玩 11:40-12:10 的「森喜剛的瘋狂纜車」。", "transport": "園區內步行。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Super+Nintendo+World+Japan"},
+                    {"time": "中午", "title": "午餐 & 經典園區", "description": "在園區內享用午餐。餐後可以去玩時間彈性的「大白鯊」或「侏羅紀公園・乘船遊」。", "transport": "園區內步行。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Universal+Studios+Japan"},
+                    {"time": "14:40 - 15:30", "title": "Express Pass: 哈利波特的魔法世界™", "description": "根據Express Pass時間準時進入園區！在 15:00-15:30 期間體驗「哈利波特禁忌之旅™」。", "transport": "園區內步行。", "mapLink": "https://www.google.com/maps/search/?api=1&query=The+Wizarding+World+of+Harry+Potter+Osaka"},
+                    {"time": "傍晚", "title": "自由探索與返回", "description": "完成所有必玩項目後，可在園區內自由閒逛、購物、觀看夜間巡遊，之後返回難波。", "transport": "從『環球影城站』搭乘JR櫻島線到『西九条站』，轉乘阪神難波線返回『大阪難波站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Universal+City+Station"}
+                  ],
+                  "optionalActivities": [
+                    {"title": "小小兵瘋狂乘車遊", "description": "如果時間許可，可以排隊體驗這個極受歡迎的設施。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Minion+Park"},
+                    {"title": "鏈鋸人 4D", "description": "期間限定的合作設施，動漫迷不要錯過！", "mapLink": "https://www.google.com/maps/search/?api=1&query=Universal+Studios+Japan"}
+                  ]
+                },
+                {
+                  "day": 6,
+                  "date": "2025-09-18",
+                  "theme": "深度探索：大阪萬博 EXPO 2025 (第二回)",
+                  "activities": [
+                    {"time": "上午", "title": "主攻不同展區", "description": "再次前往萬博會場，專注於昨天未能深入探索的區域，或重溫喜愛的展館。", "transport": "從 Osaka Metro『難波站』搭乘御堂筋線到『本町站』，轉乘中央線前往『夢洲站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Expo+2025+Osaka"},
+                    {"time": "下午", "title": "最後採購與整理", "description": "購買萬博限定紀念品，之後返回難波酒店領取行李，稍作整理。", "transport": "從『夢洲站』搭乘地鐵返回難波。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Namba+Station"},
+                    {"time": "傍晚", "title": "前往機場", "description": "預留充足時間，準備前往關西國際機場，辦理登機手續。", "transport": "從『南海難波站』搭乘南海電鐵特急 Rapi:t 或空港急行前往關西機場。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Kansai+International+Airport"}
+                  ]
+                }
+              ],
+              "foodieList": [
+                {"name": "Luke's Lobster 龍蝦包", "eaten": false, "mapLink": "https://www.google.com/maps/search/?api=1&query=Luke's+Lobster+心斎橋"},
+                {"name": "りくろーおじさんの店 (老爺爺起司蛋糕)", "eaten": true, "mapLink": "https://www.google.com/maps/search/?api=1&query=りくろーおじさんの店+なんば本店"},
+                {"name": "元祖串炸達摩", "eaten": false, "mapLink": "https://www.google.com/maps/search/?api=1&query=元祖串かつ+だるま+新世界総本店"},
+                {"name": "HARBS 水果千層蛋糕", "eaten": false, "mapLink": "https://www.google.com/maps/search/?api=1&query=HARBS+大丸心斎橋店"}
+              ]
+            };
+
+            // --- DOM Elements ---
+            const mainPage = document.getElementById('main-page');
+            const detailPage = document.getElementById('detail-page');
+            const mainTitle = document.getElementById('main-title');
+            const itineraryCardsContainer = document.getElementById('itinerary-cards');
+            const foodieListContainer = document.getElementById('foodie-list');
+            const detailTitle = document.getElementById('detail-title');
+            const detailContent = document.getElementById('detail-content');
+            const backButton = document.getElementById('back-button');
+
+            // --- Render Functions ---
+
+            // Render the main page with itinerary cards and foodie list
+            function renderMainPage() {
+                mainTitle.textContent = tripData.tripTitle;
+                
+                // Render itinerary cards
+                itineraryCardsContainer.innerHTML = '';
+                tripData.itinerary.forEach((day, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-gray-100 p-5 rounded-xl shadow-sm hover:shadow-md hover:bg-gray-200 transition-all cursor-pointer';
+                    card.dataset.dayIndex = index;
+                    card.innerHTML = `
+                        <p class="text-sm font-semibold text-blue-600">Day ${day.day}</p>
+                        <h3 class="text-lg font-bold text-gray-900 mt-1">${day.theme}</h3>
+                    `;
+                    itineraryCardsContainer.appendChild(card);
+                });
+
+                // Render foodie list
+                foodieListContainer.innerHTML = '';
+                tripData.foodieList.forEach((item, index) => {
+                    const foodItem = document.createElement('div');
+                    foodItem.className = 'flex items-center bg-gray-100 p-3 rounded-lg';
+                    foodItem.innerHTML = `
+                        <input type="checkbox" id="food-${index}" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" ${item.eaten ? 'checked' : ''}>
+                        <label for="food-${index}" class="ml-3 text-gray-800 flex-grow ${item.eaten ? 'line-through text-gray-500' : ''}">${item.name}</label>
+                        <a href="${item.mapLink}" target="_blank" class="p-2 rounded-full hover:bg-gray-200">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-gray-600"></i>
+                        </a>
+                    `;
+                    foodieListContainer.appendChild(foodItem);
+                });
+
+                lucide.createIcons();
+            }
+
+            // Render the detail page for a specific day
+            function renderDetailPage(dayIndex) {
+                const dayData = tripData.itinerary[dayIndex];
+                detailTitle.textContent = dayData.theme;
+                detailContent.innerHTML = ''; // Clear previous content
+
+                // Render activities timeline
+                dayData.activities.forEach(activity => {
+                    const activityItem = document.createElement('div');
+                    activityItem.className = 'timeline-item relative pl-10 pb-14';
+                    activityItem.innerHTML = `
+                        <div class="absolute left-0 flex items-center justify-center w-10 h-10">
+                            <div class="w-4 h-4 bg-blue-500 rounded-full border-4 border-white"></div>
+                        </div>
+                        <p class="text-sm font-semibold text-gray-500 mb-1">${activity.time}</p>
+                        <h4 class="font-bold text-lg text-gray-900">${activity.title}</h4>
+                        <p class="text-gray-700 mt-1 mb-3">${activity.description}</p>
+                        <a href="${activity.mapLink}" target="_blank" class="inline-flex items-center gap-2 text-sm text-blue-700 bg-blue-50 p-2 rounded-lg hover:bg-blue-100">
+                            <i data-lucide="tram-front" class="w-4 h-4"></i>
+                            <span>${activity.transport}</span>
+                            <i data-lucide="map-pin" class="w-4 h-4 ml-auto"></i>
+                        </a>
+                    `;
+                    detailContent.appendChild(activityItem);
+                });
+                
+                // Render optional activities if they exist
+                if (dayData.optionalActivities && dayData.optionalActivities.length > 0) {
+                    const optionalSection = document.createElement('div');
+                    optionalSection.className = 'mt-6 pt-6 border-t border-gray-200';
+                    let optionalHtml = `<h4 class="text-lg font-bold mb-4 text-gray-900">彈性選擇</h4><div class="space-y-4">`;
+                    dayData.optionalActivities.forEach(optActivity => {
+                        optionalHtml += `
+                            <a href="${optActivity.mapLink}" target="_blank" class="block bg-gray-50 p-4 rounded-lg hover:bg-gray-100">
+                                <h5 class="font-bold text-gray-800">${optActivity.title}</h5>
+                                <p class="text-sm text-gray-600 mt-1">${optActivity.description}</p>
+                            </a>
+                        `;
+                    });
+                    optionalHtml += `</div>`;
+                    optionalSection.innerHTML = optionalHtml;
+                    detailContent.appendChild(optionalSection);
+                }
+
+                lucide.createIcons();
+            }
+
+            // --- Page Navigation ---
+            function showDetailPage(dayIndex) {
+                renderDetailPage(dayIndex);
+                detailPage.classList.remove('page-hidden');
+            }
+
+            function hideDetailPage() {
+                detailPage.classList.add('page-hidden');
+            }
+
+            // --- Event Listeners ---
+            itineraryCardsContainer.addEventListener('click', (e) => {
+                const card = e.target.closest('[data-day-index]');
+                if (card) {
+                    showDetailPage(card.dataset.dayIndex);
+                }
+            });
+
+            backButton.addEventListener('click', hideDetailPage);
+
+            foodieListContainer.addEventListener('click', (e) => {
+                if (e.target.type === 'checkbox') {
+                    const label = e.target.nextElementSibling;
+                    label.classList.toggle('line-through');
+                    label.classList.toggle('text-gray-500');
+                }
+            });
+
+            // --- Initial Render ---
+            renderMainPage();
+        });
+    </script>
+</body>
+</html>
