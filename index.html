@@ -45,7 +45,7 @@
     <div id="app-container" class="relative min-h-screen w-full max-w-lg mx-auto bg-white overflow-x-hidden shadow-2xl">
 
         <!-- Main Page -->
-        <div id="main-page" class="page absolute inset-0 p-6 pt-20">
+        <div id="main-page" class="page absolute inset-0 p-6 pt-20 overflow-y-auto">
             <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-lg bg-white/80 backdrop-blur-sm z-20 px-6 py-4 border-b border-gray-200">
                 <h1 id="main-title" class="text-2xl font-bold text-center text-gray-900"></h1>
             </header>
@@ -147,6 +147,7 @@
                     {"time": "傍晚", "title": "自由探索與返回", "description": "完成所有必玩項目後，可在園區內自由閒逛、購物、觀看夜間巡遊，之後返回梅田。", "transport": "從『環球影城站』搭乘JR返回『西九条站』再轉乘大阪環狀線到『梅田站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Universal+City+Station"}
                   ],
                   "optionalActivities": [
+                    {"title": "バイオハザード™ (ハロウィーン)", "description": "體驗萬聖節期間限定的恐怖迷宮，與喪屍近距離接觸！活動通常在傍晚6點後開始。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Universal+Studios+Japan"},
                     {"title": "藥屋のひとりごと ミステリー・ウォーク", "description": "期間限定合作！化身藥師，與貓貓一起在園區內解開謎題。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Universal+Studios+Japan"},
                     {"title": "小小兵瘋狂乘車遊", "description": "如果時間許可，可以排隊體驗這個極受歡迎的設施。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Minion+Park"},
                     {"title": "鏈鋸人 4D", "description": "期間限定的合作設施，動漫迷不要錯過！", "mapLink": "https://www.google.com/maps/search/?api=1&query=Universal+Studios+Japan"}
@@ -157,9 +158,10 @@
                   "date": "2025-09-18",
                   "theme": "告別大阪：萬博回味 & 歸途",
                   "activities": [
-                    {"time": "上午", "title": "主攻不同展區", "description": "再次前往萬博會場，專注於昨天未能深入探索的區域，或重溫喜愛的展館。", "transport": "從 Osaka Metro『中津站』或『梅田站』搭乘御堂筋線到『本町站』，轉乘中央線前往『夢洲站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Expo+2025+Osaka"},
-                    {"time": "下午", "title": "最後採購與整理", "description": "購買萬博限定紀念品，之後返回梅田酒店領取行李，稍作整理。", "transport": "從『夢洲站』搭乘地鐵返回梅田。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Umeda+Station"},
-                    {"time": "22:45", "title": "前往機場 & 辦理登機", "description": "預留充足時間前往關西國際機場，準備搭乘 22:45 起飛的 MM069 航班返回香港。", "transport": "從梅田地區搭乘機場巴士 (Airport Limousine Bus) 或從 JR 大阪站搭乘關空快速前往機場。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Kansai+International+Airport"}
+                    {"time": "上午", "title": "萬博會場最後衝刺", "description": "再次前往萬博會場，專注於昨天未能深入探索的區域，或重溫喜愛的展館。", "transport": "從 Osaka Metro『中津站』或『梅田站』搭乘御堂筋線到『本町站』，轉乘中央線前往『夢洲站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Expo+2025+Osaka"},
+                    {"time": "下午 (約 16:30)", "title": "最後採購 & 準備移動", "description": "購買萬博限定紀念品，準備離開會場返回酒店。", "transport": "從『夢洲站』搭乘地鐵返回梅田。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Umeda+Station"},
+                    {"time": "17:45", "title": "抵達梅田 & 領取行李", "description": "抵達梅田後，前往東橫INN領取寄存的行李。", "transport": "步行", "mapLink": "https://www.google.com/maps/search/?api=1&query=Toyoko+Inn+Osaka+Umeda+Nakatsu+No.1"},
+                    {"time": "18:30", "title": "從梅田前往機場", "description": "航班於 22:45 起飛。建議最遲於 18:30 從梅田出發，目標在 19:45 前到達機場。", "transport": "從梅田地區搭乘機場巴士 (Airport Limousine Bus) 是最方便的選擇。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Kansai+International+Airport"}
                   ]
                 }
               ],
@@ -184,6 +186,22 @@
 
             // --- Render Functions ---
 
+            function renderFoodieList() {
+                foodieListContainer.innerHTML = '';
+                tripData.foodieList.forEach((item, index) => {
+                    const foodItem = document.createElement('div');
+                    foodItem.className = 'flex items-center bg-gray-100 p-3 rounded-lg';
+                    foodItem.innerHTML = `
+                        <input type="checkbox" id="food-${index}" data-food-index="${index}" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" ${item.eaten ? 'checked' : ''}>
+                        <label for="food-${index}" class="ml-3 text-gray-800 flex-grow ${item.eaten ? 'line-through text-gray-500' : ''}">${item.name}</label>
+                        <a href="${item.mapLink}" target="_blank" class="p-2 rounded-full hover:bg-gray-200">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-gray-600"></i>
+                        </a>
+                    `;
+                    foodieListContainer.appendChild(foodItem);
+                });
+            }
+
             function renderMainPage() {
                 mainTitle.textContent = tripData.tripTitle;
                 
@@ -199,20 +217,7 @@
                     itineraryCardsContainer.appendChild(card);
                 });
 
-                foodieListContainer.innerHTML = '';
-                tripData.foodieList.forEach((item, index) => {
-                    const foodItem = document.createElement('div');
-                    foodItem.className = 'flex items-center bg-gray-100 p-3 rounded-lg';
-                    foodItem.innerHTML = `
-                        <input type="checkbox" id="food-${index}" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" ${item.eaten ? 'checked' : ''}>
-                        <label for="food-${index}" class="ml-3 text-gray-800 flex-grow ${item.eaten ? 'line-through text-gray-500' : ''}">${item.name}</label>
-                        <a href="${item.mapLink}" target="_blank" class="p-2 rounded-full hover:bg-gray-200">
-                            <i data-lucide="map-pin" class="w-5 h-5 text-gray-600"></i>
-                        </a>
-                    `;
-                    foodieListContainer.appendChild(foodItem);
-                });
-
+                renderFoodieList();
                 lucide.createIcons();
             }
 
@@ -247,9 +252,12 @@
                     let optionalHtml = `<h4 class="text-lg font-bold mb-4 text-gray-900">彈性選擇</h4><div class="space-y-4">`;
                     dayData.optionalActivities.forEach(optActivity => {
                         optionalHtml += `
-                            <a href="${optActivity.mapLink}" target="_blank" class="block bg-gray-50 p-4 rounded-lg hover:bg-gray-100">
-                                <h5 class="font-bold text-gray-800">${optActivity.title}</h5>
-                                <p class="text-sm text-gray-600 mt-1">${optActivity.description}</p>
+                            <a href="${optActivity.mapLink}" target="_blank" class="flex items-center gap-4 bg-gray-50 p-4 rounded-lg hover:bg-gray-100">
+                                <div class="flex-grow">
+                                    <h5 class="font-bold text-gray-800">${optActivity.title}</h5>
+                                    <p class="text-sm text-gray-600 mt-1">${optActivity.description}</p>
+                                </div>
+                                <i data-lucide="map-pin" class="w-5 h-5 text-gray-500 flex-shrink-0"></i>
                             </a>
                         `;
                     });
@@ -283,9 +291,11 @@
 
             foodieListContainer.addEventListener('click', (e) => {
                 if (e.target.type === 'checkbox') {
+                    const foodIndex = parseInt(e.target.dataset.foodIndex, 10);
+                    tripData.foodieList[foodIndex].eaten = e.target.checked;
                     const label = e.target.nextElementSibling;
-                    label.classList.toggle('line-through');
-                    label.classList.toggle('text-gray-500');
+                    label.classList.toggle('line-through', e.target.checked);
+                    label.classList.toggle('text-gray-500', e.target.checked);
                 }
             });
 
