@@ -104,7 +104,7 @@
                     {"time": "17:30", "title": "ONE OK ROCK 2025 TOUR \"DETOX\"", "description": "17:30開演。準備入場，享受一場熱血沸騰的搖滾演唱會！", "transport": "從 Osaka Metro『難波站』搭乘御堂筋線 (Midosuji Line) 前往『長居站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Yanmar+Stadium+Nagai"}
                   ],
                   "optionalActivities": [
-                    {"title": "心齋橋筋 & 美國村購物", "description": "如果演唱會前還有時間，可以到心齋橋筋的藥妝店和百貨公司逛逛，或去充滿個性的美國村尋寶。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Shinsaibashi-suji"}
+                    {"title": "teamLab Botanical Garden (夜間)", "description": "演唱會後可考慮前往。場館在長居公園內，步行可達。最後入場時間為 21:30，時間會非常緊湊，請自行斟酌。", "mapLink": "https://www.google.com/maps/search/?api=1&query=teamLab+Botanical+Garden+Osaka"}
                   ]
                 },
                 {
@@ -117,9 +117,9 @@
                     {"time": "傍晚", "title": "梅田晚餐與夜景", "description": "在酒店 Check-in 後，可以考慮登上梅田藍天大廈看夜景，並在附近享用晚餐。", "transport": "步行或短程交通。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Umeda+Sky+Building"}
                   ],
                   "optionalActivities": [
+                    {"title": "EST (エスト)", "description": "集結了眾多年輕人喜愛的服飾品牌，是尋找平價潮流單品的好去處。", "mapLink": "https://www.google.com/maps/search/?api=1&query=EST+Osaka"},
                     {"title": "EDION (LINKS UMEDA店)", "description": "大型電器連鎖店，耳機選擇也很多，是梅田地區的好選擇。", "mapLink": "https://www.google.com/maps/search/?api=1&query=EDION+LINKS+UMEDA"},
-                    {"title": "Yodobashi Camera (梅田店)", "description": "大型電器連鎖店，從家電、相機到動漫模型應有盡有。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Yodobashi+Umeda"},
-                    {"title": "GU (梅田店)", "description": "日本國民品牌，價格實惠，款式眾多，適合掃貨。", "mapLink": "https://www.google.com/maps/search/?api=1&query=GU+Umeda"}
+                    {"title": "Yodobashi Camera (梅田店)", "description": "大型電器連鎖店，從家電、相機到動漫模型應有盡有。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Yodobashi+Umeda"}
                   ]
                 },
                 {
@@ -163,7 +163,6 @@
                   "day": 6,
                   "date": "2025-09-18",
                   "theme": "萬博 & 歸途",
-                  "notes": ["注意：部分熱門場館可能需要預約或抽選，請留意官方公佈。"],
                   "activities": [
                     {"time": "09:00", "title": "萬博會場最後衝刺", "description": "準時九點到達會場，把握最後機會，專注於昨天未能深入探索的區域，或重溫喜愛的展館。", "transport": "從『東梅田站』搭乘谷町線到『谷町四丁目站』，轉乘中央線前往『夢洲站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Expo+2025+Osaka"},
                     {"time": "下午 (約 16:30)", "title": "最後採購 & 準備移動", "description": "購買萬博限定紀念品，準備離開會場返回酒店。", "transport": "從『夢洲站』搭乘地鐵返回梅田。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Umeda+Station"},
@@ -227,16 +226,9 @@
                     const card = document.createElement('div');
                     card.className = 'bg-gray-100 p-5 rounded-xl shadow-sm hover:shadow-md hover:bg-gray-200 transition-all cursor-pointer';
                     card.dataset.dayIndex = index;
-                    let noteIcon = '';
-                    if (day.notes && day.notes.length > 0) {
-                        noteIcon = `<i data-lucide="bell-ring" class="w-4 h-4 text-amber-600"></i>`;
-                    }
                     card.innerHTML = `
-                        <div class="flex justify-between items-center">
-                           <div class="flex items-center gap-2">
-                             <p class="text-sm font-semibold text-blue-600">Day ${day.day}</p>
-                             ${noteIcon}
-                           </div>
+                        <div class="flex justify-between items-baseline">
+                           <p class="text-sm font-semibold text-blue-600">Day ${day.day}</p>
                            <p class="text-xs text-gray-500">${formatDate(day.date)}</p>
                         </div>
                         <h3 class="text-lg font-bold text-gray-900 mt-1">${day.theme}</h3>
@@ -252,22 +244,6 @@
                 const dayData = tripData.itinerary[dayIndex];
                 detailTitle.textContent = `Day ${dayData.day} ${formatDate(dayData.date)}`;
                 detailContent.innerHTML = ''; 
-
-                // Render notes if they exist
-                if (dayData.notes && dayData.notes.length > 0) {
-                    const notesSection = document.createElement('div');
-                    notesSection.className = 'mb-6 space-y-2';
-                    dayData.notes.forEach(note => {
-                        const noteElement = document.createElement('div');
-                        noteElement.className = 'bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-r-lg flex items-start gap-3';
-                        noteElement.innerHTML = `
-                            <div><i data-lucide="alert-triangle" class="w-5 h-5"></i></div>
-                            <p class="text-sm">${note}</p>
-                        `;
-                        notesSection.appendChild(noteElement);
-                    });
-                    detailContent.appendChild(notesSection);
-                }
 
                 // Render activities timeline
                 dayData.activities.forEach(activity => {
