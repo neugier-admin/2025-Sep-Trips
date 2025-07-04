@@ -76,7 +76,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             // --- DATA SOURCE ---
             const tripData = {
-              "tripTitle": "我們的九月大阪體驗之旅 2025",
+              "tripTitle": "大阪 2025",
               "baseLocation": "難波 (Namba) / 梅田 (Umeda)",
               "itinerary": [
                 {
@@ -99,8 +99,8 @@
                   "theme": "ONE OK ROCK DETOX 2025",
                   "activities": [
                     {"time": "當日住宿", "title": "ROZY HOTEL NAMBA", "description": "旅程第一、二日的下榻酒店。", "transport": "位於難波地區，交通便利。", "mapLink": "https://www.google.com/maps/search/?api=1&query=ROZY+HOTEL+NAMBA"},
-                    {"time": "上午", "title": "難波周邊散策", "description": "在酒店附近隨意逛逛，可以先到黑門市場品嚐新鮮的海產和地道小食，感受當地的生活氣息。", "transport": "從酒店步行前往。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Kuromon+Ichiba+Market"},
-                    {"time": "下午", "title": "提早前往長居 & 購買周邊商品", "description": "提早前往長居公園，感受演唱會氣氛並排隊購買官方周邊商品 (Goods)。", "transport": "從 Osaka Metro『難波站』搭乘御堂筋線 (Midosuji Line) 前往『長居站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Yanmar+Stadium+Nagai"},
+                    {"time": "上午", "title": "心齋橋 PARCO 購物", "description": "從難波前往心齋橋，直達 PARCO 百貨。這裡集結了潮流、動漫、藝術，可以直衝6樓的CAPCOM STORE。", "transport": "從 Osaka Metro『難波站』搭乘御堂筋線 (Midosuji Line) 前往『心齋橋站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Shinsaibashi+PARCO"},
+                    {"time": "下午", "title": "提早前往長居 & 購買周邊商品", "description": "提早前往長居公園，感受演唱會氣氛並排隊購買官方周邊商品 (Goods)。", "transport": "從 Osaka Metro『心齋橋站』搭乘御堂筋線 (Midosuji Line) 前往『長居站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Yanmar+Stadium+Nagai"},
                     {"time": "17:30", "title": "ONE OK ROCK 2025 TOUR \"DETOX\"", "description": "17:30開演。準備入場，享受一場熱血沸騰的搖滾演唱會！", "transport": "從 Osaka Metro『難波站』搭乘御堂筋線 (Midosuji Line) 前往『長居站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Yanmar+Stadium+Nagai"}
                   ],
                   "optionalActivities": [
@@ -117,6 +117,7 @@
                     {"time": "傍晚", "title": "梅田晚餐與夜景", "description": "在酒店 Check-in 後，可以考慮登上梅田藍天大廈看夜景，並在附近享用晚餐。", "transport": "步行或短程交通。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Umeda+Sky+Building"}
                   ],
                   "optionalActivities": [
+                    {"title": "EDION (LINKS UMEDA店)", "description": "大型電器連鎖店，耳機選擇也很多，是梅田地區的好選擇。", "mapLink": "https://www.google.com/maps/search/?api=1&query=EDION+LINKS+UMEDA"},
                     {"title": "Yodobashi Camera (梅田店)", "description": "大型電器連鎖店，從家電、相機到動漫模型應有盡有。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Yodobashi+Umeda"},
                     {"title": "GU (梅田店)", "description": "日本國民品牌，價格實惠，款式眾多，適合掃貨。", "mapLink": "https://www.google.com/maps/search/?api=1&query=GU+Umeda"}
                   ]
@@ -125,6 +126,7 @@
                   "day": 4,
                   "date": "2025-09-16",
                   "theme": "大阪萬博 EXPO 2025",
+                  "notes": ["注意：部分熱門場館可能需要預約或抽選，請留意官方公佈。"],
                   "activities": [
                     {"time": "當日住宿", "title": "東橫INN 大阪梅田東", "description": "旅程第三至六日的下榻酒店。", "transport": "位於梅田東地區，鄰近地鐵站。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Toyoko+Inn+Osaka+Umeda+Higashi"},
                     {"time": "09:00", "title": "抵達夢洲會場", "description": "準時九點到達會場，準備迎接未來的衝擊！", "transport": "建議約 08:00 從酒店出發。從『東梅田站』搭乘谷町線到『谷町四丁目站』，轉乘中央線前往『夢洲站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Yumeshima+Station+Osaka"},
@@ -141,6 +143,7 @@
                   "day": 5,
                   "date": "2025-09-17",
                   "theme": "USJ",
+                  "notes": ["注意：確實的活動時間表，請於出發前7日到官網確認。"],
                   "activities": [
                     {"time": "當日住宿", "title": "東橫INN 大阪梅田東", "description": "旅程第三至六日的下榻酒店。", "transport": "位於梅田東地區，鄰近地鐵站。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Toyoko+Inn+Osaka+Umeda+Higashi"},
                     {"time": "清晨 (7:00)", "title": "提早出發，搶佔先機", "description": "預計7點到達USJ門口排隊，開園後第一時間衝去排『SPY x FAMILY 秘密任務 4D』。", "transport": "從『東梅田站』搭乘谷町線到『天王寺站』，轉乘JR大阪環狀線到『西九条站』，再轉乘JR櫻島線到『環球影城站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Universal+Studios+Japan"},
@@ -160,6 +163,7 @@
                   "day": 6,
                   "date": "2025-09-18",
                   "theme": "萬博 & 歸途",
+                  "notes": ["注意：部分熱門場館可能需要預約或抽選，請留意官方公佈。"],
                   "activities": [
                     {"time": "09:00", "title": "萬博會場最後衝刺", "description": "準時九點到達會場，把握最後機會，專注於昨天未能深入探索的區域，或重溫喜愛的展館。", "transport": "從『東梅田站』搭乘谷町線到『谷町四丁目站』，轉乘中央線前往『夢洲站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Expo+2025+Osaka"},
                     {"time": "下午 (約 16:30)", "title": "最後採購 & 準備移動", "description": "購買萬博限定紀念品，準備離開會場返回酒店。", "transport": "從『夢洲站』搭乘地鐵返回梅田。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Umeda+Station"},
@@ -187,6 +191,16 @@
             const detailContent = document.getElementById('detail-content');
             const backButton = document.getElementById('back-button');
 
+            // --- Helper Functions ---
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+                const month = date.getMonth() + 1;
+                const dayOfMonth = date.getDate();
+                const weekday = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"][date.getDay()];
+                return `(${String(month).padStart(2, '0')}月${String(dayOfMonth).padStart(2, '0')}日, ${weekday})`;
+            }
+
             // --- Render Functions ---
 
             function renderFoodieList() {
@@ -213,8 +227,18 @@
                     const card = document.createElement('div');
                     card.className = 'bg-gray-100 p-5 rounded-xl shadow-sm hover:shadow-md hover:bg-gray-200 transition-all cursor-pointer';
                     card.dataset.dayIndex = index;
+                    let noteIcon = '';
+                    if (day.notes && day.notes.length > 0) {
+                        noteIcon = `<i data-lucide="bell-ring" class="w-4 h-4 text-amber-600"></i>`;
+                    }
                     card.innerHTML = `
-                        <p class="text-sm font-semibold text-blue-600">Day ${day.day}</p>
+                        <div class="flex justify-between items-center">
+                           <div class="flex items-center gap-2">
+                             <p class="text-sm font-semibold text-blue-600">Day ${day.day}</p>
+                             ${noteIcon}
+                           </div>
+                           <p class="text-xs text-gray-500">${formatDate(day.date)}</p>
+                        </div>
                         <h3 class="text-lg font-bold text-gray-900 mt-1">${day.theme}</h3>
                     `;
                     itineraryCardsContainer.appendChild(card);
@@ -226,8 +250,24 @@
 
             function renderDetailPage(dayIndex) {
                 const dayData = tripData.itinerary[dayIndex];
-                detailTitle.textContent = dayData.theme;
+                detailTitle.textContent = `Day ${dayData.day} ${formatDate(dayData.date)}`;
                 detailContent.innerHTML = ''; 
+
+                // Render notes if they exist
+                if (dayData.notes && dayData.notes.length > 0) {
+                    const notesSection = document.createElement('div');
+                    notesSection.className = 'mb-6 space-y-2';
+                    dayData.notes.forEach(note => {
+                        const noteElement = document.createElement('div');
+                        noteElement.className = 'bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-r-lg flex items-start gap-3';
+                        noteElement.innerHTML = `
+                            <div><i data-lucide="alert-triangle" class="w-5 h-5"></i></div>
+                            <p class="text-sm">${note}</p>
+                        `;
+                        notesSection.appendChild(noteElement);
+                    });
+                    detailContent.appendChild(notesSection);
+                }
 
                 // Render activities timeline
                 dayData.activities.forEach(activity => {
