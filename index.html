@@ -38,51 +38,81 @@
         .page-hidden {
             transform: translateX(100%);
         }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loader-small {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-    <div id="app-container" class="relative min-h-screen w-full max-w-lg mx-auto bg-white overflow-x-hidden shadow-2xl">
+    <div id="app-container" class="relative min-h-screen w-full max-w-lg mx-auto bg-white overflow-x-hidden shadow-2xl flex flex-col">
 
-        <!-- Main Page -->
-        <div id="main-page" class="page absolute inset-0 p-6 pt-20 overflow-y-auto">
+        <!-- Main Page Container -->
+        <div id="main-view-container" class="flex flex-col flex-grow">
+            <!-- Header -->
             <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-lg bg-white/80 backdrop-blur-sm z-20 px-6 py-4 border-b border-gray-200">
                 <h1 id="main-title" class="text-2xl font-bold text-center text-gray-900"></h1>
             </header>
-            
-            <main class="space-y-8">
-                <section id="itinerary-cards" class="space-y-4"></section>
-                <section>
-                    <h2 class="text-xl font-bold mb-4 text-gray-900">我的美食清單</h2>
-                    <div id="foodie-list" class="space-y-3"></div>
-                </section>
+
+            <!-- Main Content Area -->
+            <main class="pt-20 pb-20 flex-grow overflow-y-auto p-6">
+                <section id="itinerary-view" class="space-y-4"></section>
+                <section id="foodie-view" class="hidden space-y-6"></section>
             </main>
+            
+            <!-- Bottom Navigation -->
+            <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg bg-white/90 backdrop-blur-sm border-t border-gray-200 z-20">
+                 <div class="flex justify-around">
+                    <button id="nav-itinerary" class="flex flex-col items-center justify-center text-blue-600 p-3 w-1/2">
+                        <i data-lucide="list-ordered" class="w-6 h-6"></i>
+                        <span class="text-xs font-semibold">行程</span>
+                    </button>
+                    <button id="nav-foodie" class="flex flex-col items-center justify-center text-gray-500 p-3 w-1/2">
+                        <i data-lucide="utensils-crossed" class="w-6 h-6"></i>
+                        <span class="text-xs">美食</span>
+                    </button>
+                </div>
+            </nav>
         </div>
 
         <!-- Detail Page -->
         <div id="detail-page" class="page page-hidden absolute inset-0 bg-white z-30 flex flex-col">
-            <header class="flex-shrink-0 flex items-center bg-white/80 backdrop-blur-sm z-20 px-4 py-4 border-b border-gray-200">
+            <header class="sticky top-0 flex-shrink-0 flex items-center bg-white/80 backdrop-blur-sm z-10 px-4 py-4 border-b border-gray-200">
                 <button id="back-button" class="p-2 rounded-full hover:bg-gray-100">
                     <i data-lucide="arrow-left" class="w-6 h-6 text-gray-700"></i>
                 </button>
                 <h2 id="detail-title" class="text-lg font-bold text-center text-gray-900 flex-grow truncate px-2"></h2>
             </header>
-            <div id="detail-content" class="flex-grow overflow-y-auto p-6"></div>
+            <div id="detail-content" class="flex-grow overflow-y-auto"></div>
         </div>
 
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             // --- DATA SOURCE ---
             const tripData = {
               "tripTitle": "大阪 2025",
-              "baseLocation": "難波 (Namba) / 梅田 (Umeda)",
+              "locations": {
+                  "Osaka": { "lat": 34.69, "lon": 135.50 },
+                  "Kishiwada": { "lat": 34.46, "lon": 135.37 },
+                  "Kyoto": { "lat": 35.01, "lon": 135.76 },
+                  "Ise": { "lat": 34.49, "lon": 136.71 },
+                  "Iga": { "lat": 34.77, "lon": 136.13 },
+                  "Nagoya": { "lat": 35.18, "lon": 136.91 }
+              },
               "itinerary": [
                 {
-                  "day": 1,
-                  "date": "2025-09-13",
-                  "theme": "岸和田祭典",
+                  "day": 1, "date": "2025-09-13", "theme": "岸和田祭典", "location": "Kishiwada",
                   "activities": [
                     {"time": "當日住宿", "title": "ROZY HOTEL NAMBA", "description": "旅程第一、二日的下榻酒店。", "transport": "位於難波地區，交通便利。", "mapLink": "https://www.google.com/maps/search/?api=1&query=ROZY+HOTEL+NAMBA"},
                     {"time": "05:50", "title": "抵達關西機場 (MM068)", "description": "航班 MM068 從香港抵達。辦理入境手續、領取行李，準備開始旅程！", "transport": "從關西機場 (KIX) 搭乘南海電鐵 (Nankai Railway) 前往『南海難波站』(約45分鐘)。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Kansai+International+Airport"},
@@ -94,9 +124,7 @@
                   ]
                 },
                 {
-                  "day": 2,
-                  "date": "2025-09-14",
-                  "theme": "ONE OK ROCK DETOX 2025",
+                  "day": 2, "date": "2025-09-14", "theme": "ONE OK ROCK DETOX 2025", "location": "Osaka",
                   "activities": [
                     {"time": "當日住宿", "title": "ROZY HOTEL NAMBA", "description": "旅程第一、二日的下榻酒店。", "transport": "位於難波地區，交通便利。", "mapLink": "https://www.google.com/maps/search/?api=1&query=ROZY+HOTEL+NAMBA"},
                     {"time": "上午", "title": "心齋橋 PARCO 購物", "description": "從難波前往心齋橋，直達 PARCO 百貨。這裡集結了潮流、動漫、藝術，可以直衝6樓的CAPCOM STORE。", "transport": "從 Osaka Metro『難波站』搭乘御堂筋線前往『心齋橋站』(約2分鐘)。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Shinsaibashi+PARCO"},
@@ -108,9 +136,7 @@
                   ]
                 },
                 {
-                  "day": 3,
-                  "date": "2025-09-15",
-                  "theme": "酒店轉移 & 購物日",
+                  "day": 3, "date": "2025-09-15", "theme": "酒店轉移 & 購物日", "location": "Osaka",
                   "activities": [
                     {"time": "上午 / 住宿", "title": "入住: 東橫INN 大阪梅田東", "description": "從難波酒店退房，前往梅田新酒店辦理入住並寄存行李。", "transport": "從 Osaka Metro『難波站』搭乘御堂筋線到『梅田站』，再轉乘谷町線到『東梅田站』後步行 (總程約20分鐘)。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Toyoko+Inn+Osaka+Umeda+Higashi"},
                     {"time": "下午", "title": "梅田購物探索", "description": "前往梅田地標之一的 HEP FIVE 商場，可以乘坐紅色摩天輪。之後在阪急百貨、大丸梅田店等大型百貨公司逛街。", "transport": "從酒店步行或搭乘地鐵至『梅田站』。", "mapLink": "https://www.google.com/maps/search/?api=1&query=HEP+FIVE"},
@@ -122,9 +148,7 @@
                   ]
                 },
                 {
-                  "day": 4,
-                  "date": "2025-09-16",
-                  "theme": "大阪萬博 EXPO 2025 (第一回)",
+                  "day": 4, "date": "2025-09-16", "theme": "大阪萬博 EXPO 2025 (第一回)", "location": "Osaka",
                   "notes": ["注意：部分熱門場館可能需要預約或抽選，請留意官方公佈。"],
                   "activities": [
                     {"time": "當日住宿", "title": "東橫INN 大阪梅田東", "description": "旅程第三至十日的下榻酒店。", "transport": "位於梅田東地區，鄰近地鐵站。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Toyoko+Inn+Osaka+Umeda+Higashi"},
@@ -134,9 +158,7 @@
                   ]
                 },
                 {
-                  "day": 5,
-                  "date": "2025-09-17",
-                  "theme": "USJ",
+                  "day": 5, "date": "2025-09-17", "theme": "USJ", "location": "Osaka",
                   "notes": ["注意：確實的活動時間表，請於出發前7日到官網確認。"],
                   "activities": [
                     {"time": "當日住宿", "title": "東橫INN 大阪梅田東", "description": "旅程第三至十日的下榻酒店。", "transport": "位於梅田東地區，鄰近地鐵站。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Toyoko+Inn+Osaka+Umeda+Higashi"},
@@ -152,9 +174,7 @@
                   ]
                 },
                 {
-                  "day": 6,
-                  "date": "2025-09-18",
-                  "theme": "京都精華一日遊",
+                  "day": 6, "date": "2025-09-18", "theme": "京都精華一日遊", "location": "Kyoto",
                   "activities": [
                     {"time": "當日住宿", "title": "東橫INN 大阪梅田東", "description": "旅程第三至十日的下榻酒店。", "transport": "位於梅田東地區，鄰近地鐵站。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Toyoko+Inn+Osaka+Umeda+Higashi"},
                     {"time": "上午", "title": "前往京都 & 清水寺道", "description": "從酒店出發，前往清水寺。參拜完宏偉嘅清水舞台後，沿住充滿古都風情嘅二年坂、三年坂石板路慢慢行落山。", "transport": "由「大阪/梅田站」搭乘 JR京都線新快速，約30分鐘直達「京都站」，再轉乘巴士前往 (約15分鐘)。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Kiyomizu-dera+Temple"},
@@ -166,9 +186,7 @@
                   ]
                 },
                 {
-                  "day": 7,
-                  "date": "2025-09-19",
-                  "theme": "直奔神話之國",
+                  "day": 7, "date": "2025-09-19", "theme": "直奔神話之國", "location": "Ise",
                   "activities": [
                     {"time": "上午", "title": "前往伊勢", "description": "在大阪梅田酒店 Check-out，寄存大件行李。輕裝前往「大阪難波站」。", "transport": "用 Pass 換領【第一張特急券】，搭乘近鐵特急直達「宇治山田站」(約1小時50分鐘)。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Ujiyamada+Station"},
                     {"time": "下午", "title": "伊勢神宮參拜", "description": "參拜伊勢神宮 (外宮及內宮)，並喺「托福橫丁」享受美食。", "transport": "搭乘巴士或步行。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Ise+Grand+Shrine"},
@@ -176,9 +194,7 @@
                   ]
                 },
                 {
-                  "day": 8,
-                  "date": "2025-09-20",
-                  "theme": "忍者修行與演唱會狂熱",
+                  "day": 8, "date": "2025-09-20", "theme": "忍者修行與演唱會狂熱", "location": "Nagoya",
                   "activities": [
                     {"time": "當日住宿", "title": "名古屋市內酒店 (待定)", "description": "在名古屋住一晚，輕鬆享受演唱會後嘅餘韻。", "transport": "名古屋市內交通", "mapLink": "https://www.google.com/maps/search/?api=1&query=Nagoya"},
                     {"time": "上午", "title": "伊賀上野城 & 忍者博物館", "description": "在酒店 Check-out 後，將行李寄存在車站儲物櫃。然後參觀伊賀上野城及旁邊的伊賀流忍者博物館。", "transport": "步行", "mapLink": "https://www.google.com/maps/search/?api=1&query=Iga+Ueno+Castle"},
@@ -187,9 +203,7 @@
                   ]
                 },
                 {
-                  "day": 9,
-                  "date": "2025-09-21",
-                  "theme": "水都くらわんか花火大会",
+                  "day": 9, "date": "2025-09-21", "theme": "水都くらわんか花火大会", "location": "Osaka",
                   "notes": ["注意：花火大會的確切舉辦日期和時間，請在出發前再次到官方網站確認。"],
                   "activities": [
                     {"time": "中午", "title": "返回大阪", "description": "在名古屋悠閒渡過上午後 Check-out。換領【第三張特急券】，搭乘豪華特急「ひのとり (Hinotori)」返回「大阪難波站」(約2小時)。", "transport": "近鐵豪華特急 ひのとり。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Osaka-Namba+Station"},
@@ -198,9 +212,7 @@
                   ]
                 },
                 {
-                  "day": 10,
-                  "date": "2025-09-22",
-                  "theme": "大阪最後巡禮 & 歸途",
+                  "day": 10, "date": "2025-09-22", "theme": "大阪最後巡禮 & 歸途", "location": "Osaka",
                   "activities": [
                     {"time": "上午", "title": "最後採購", "description": "在梅田地區進行最後的購物，購買手信或補貨。", "transport": "步行或搭乘地鐵。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Umeda+Station"},
                     {"time": "中午", "title": "退房與寄存行李", "description": "返回酒店辦理退房手續，並將行李寄存在酒店。", "transport": "步行", "mapLink": "https://www.google.com/maps/search/?api=1&query=Toyoko+Inn+Osaka+Umeda+Higashi"},
@@ -219,15 +231,17 @@
             };
 
             // --- DOM Elements ---
-            const mainPage = document.getElementById('main-page');
+            const mainViewContainer = document.getElementById('main-view-container');
             const detailPage = document.getElementById('detail-page');
             const mainTitle = document.getElementById('main-title');
-            const itineraryCardsContainer = document.getElementById('itinerary-cards');
-            const foodieListContainer = document.getElementById('foodie-list');
+            const itineraryView = document.getElementById('itinerary-view');
+            const foodieView = document.getElementById('foodie-view');
             const detailTitle = document.getElementById('detail-title');
             const detailContent = document.getElementById('detail-content');
             const backButton = document.getElementById('back-button');
-
+            const navItinerary = document.getElementById('nav-itinerary');
+            const navFoodie = document.getElementById('nav-foodie');
+            
             // --- Helper Functions ---
             function formatDate(dateString) {
                 const date = new Date(dateString);
@@ -238,100 +252,224 @@
                 return `(${String(month).padStart(2, '0')}月${String(dayOfMonth).padStart(2, '0')}日, ${weekday})`;
             }
 
+            function getWeatherIcon(code) {
+                if ([0, 1].includes(code)) return '☀️';
+                if ([2].includes(code)) return '⛅️';
+                if ([3].includes(code)) return '☁️';
+                if ([45, 48].includes(code)) return '🌫️';
+                if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) return '🌧️';
+                if ([71, 73, 75, 77, 85, 86].includes(code)) return '❄️';
+                if ([95, 96, 99].includes(code)) return '⛈️';
+                return '🌡️';
+            }
+
+            async function fetchAllWeatherData(locations, itinerary) {
+                const weatherByLocation = {};
+                const startDate = itinerary[0].date;
+                const endDate = itinerary[itinerary.length - 1].date;
+                const today = new Date();
+                const tripStartDate = new Date(startDate);
+                const diffTime = tripStartDate - today;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                let apiType = 'forecast';
+                let queryStartDate = startDate;
+                let queryEndDate = endDate;
+
+                if (diffDays > 16) {
+                    apiType = 'historical';
+                    const start = new Date(startDate);
+                    start.setFullYear(start.getFullYear() - 1);
+                    queryStartDate = start.toISOString().split('T')[0];
+                    
+                    const end = new Date(endDate);
+                    end.setFullYear(end.getFullYear() - 1);
+                    queryEndDate = end.toISOString().split('T')[0];
+                }
+
+                const promises = Object.entries(locations).map(async ([name, coords]) => {
+                    let url = '';
+                    if (apiType === 'forecast') {
+                        url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo&forecast_days=16`;
+                    } else {
+                        url = `https://archive-api.open-meteo.com/v1/archive?latitude=${coords.lat}&longitude=${coords.lon}&start_date=${queryStartDate}&end_date=${queryEndDate}&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo`;
+                    }
+                    
+                    try {
+                        const response = await fetch(url);
+                        const data = await response.json();
+                        weatherByLocation[name] = { type: apiType, daily: data.daily };
+                    } catch (error) {
+                        console.error(`Failed to fetch weather for ${name}:`, error);
+                        weatherByLocation[name] = null;
+                    }
+                });
+                await Promise.all(promises);
+                return weatherByLocation;
+            }
+
             // --- Render Functions ---
 
             function renderFoodieList() {
-                foodieListContainer.innerHTML = '';
-                tripData.foodieList.forEach((item, index) => {
-                    const foodItem = document.createElement('div');
-                    foodItem.className = 'flex items-center bg-gray-100 p-3 rounded-lg';
-                    foodItem.innerHTML = `
-                        <input type="checkbox" id="food-${index}" data-food-index="${index}" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" ${item.eaten ? 'checked' : ''}>
-                        <label for="food-${index}" class="ml-3 text-gray-800 flex-grow ${item.eaten ? 'line-through text-gray-500' : ''}">${item.name}</label>
-                        <a href="${item.mapLink}" target="_blank" class="p-2 rounded-full hover:bg-gray-200">
-                            <i data-lucide="map-pin" class="w-5 h-5 text-gray-600"></i>
-                        </a>
-                    `;
-                    foodieListContainer.appendChild(foodItem);
-                });
+                const nambaFood = tripData.foodieList.filter(item => !item.mapLink.toLowerCase().includes('umeda'));
+                const umedaFood = tripData.foodieList.filter(item => item.mapLink.toLowerCase().includes('umeda'));
+                
+                let html = '';
+
+                if (nambaFood.length > 0) {
+                    html += `<h3 class="text-lg font-bold text-gray-800">難波・心齋橋</h3><div class="space-y-3 mt-2">`;
+                    nambaFood.forEach(item => {
+                        const originalIndex = tripData.foodieList.indexOf(item);
+                        html += `
+                            <div class="flex items-center bg-gray-100 p-3 rounded-lg">
+                                <input type="checkbox" id="food-${originalIndex}" data-food-index="${originalIndex}" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" ${item.eaten ? 'checked' : ''}>
+                                <label for="food-${originalIndex}" class="ml-3 text-gray-800 flex-grow ${item.eaten ? 'line-through text-gray-500' : ''}">${item.name}</label>
+                                <a href="${item.mapLink}" target="_blank" class="p-2 rounded-full hover:bg-gray-200">
+                                    <i data-lucide="map-pin" class="w-5 h-5 text-gray-600"></i>
+                                </a>
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                }
+
+                if (umedaFood.length > 0) {
+                    html += `<h3 class="text-lg font-bold text-gray-800 mt-6">梅田</h3><div class="space-y-3 mt-2">`;
+                    umedaFood.forEach(item => {
+                        const originalIndex = tripData.foodieList.indexOf(item);
+                        html += `
+                            <div class="flex items-center bg-gray-100 p-3 rounded-lg">
+                                <input type="checkbox" id="food-${originalIndex}" data-food-index="${originalIndex}" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" ${item.eaten ? 'checked' : ''}>
+                                <label for="food-${originalIndex}" class="ml-3 text-gray-800 flex-grow ${item.eaten ? 'line-through text-gray-500' : ''}">${item.name}</label>
+                                <a href="${item.mapLink}" target="_blank" class="p-2 rounded-full hover:bg-gray-200">
+                                    <i data-lucide="map-pin" class="w-5 h-5 text-gray-600"></i>
+                                </a>
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                }
+
+                foodieView.innerHTML = html;
             }
 
-            function renderMainPage() {
-                mainTitle.textContent = tripData.tripTitle;
-                
-                itineraryCardsContainer.innerHTML = '';
+            async function renderItinerary(weatherByLocation) {
+                itineraryView.innerHTML = '';
+                let isHistorical = false;
                 tripData.itinerary.forEach((day, index) => {
                     const card = document.createElement('div');
                     card.className = 'bg-gray-100 p-5 rounded-xl shadow-sm hover:shadow-md hover:bg-gray-200 transition-all cursor-pointer';
                     card.dataset.dayIndex = index;
+                    
+                    let weatherHtml = '<div class="w-12 h-10 flex items-center justify-center"><div class="loader-small"></div></div>'; 
+                    const locationWeatherData = weatherByLocation[day.location];
+                    if(locationWeatherData) {
+                        if(locationWeatherData.type === 'historical') isHistorical = true;
+                        const dailyData = locationWeatherData.daily;
+                        if (dailyData) {
+                            const weatherIndex = dailyData.time.findIndex(t => t.includes(day.date.substring(5)));
+                            if (weatherIndex !== -1) {
+                                const icon = getWeatherIcon(dailyData.weathercode[weatherIndex]);
+                                const maxTemp = Math.round(dailyData.temperature_2m_max[weatherIndex]);
+                                const minTemp = Math.round(dailyData.temperature_2m_min[weatherIndex]);
+                                weatherHtml = `<div class="text-right"><div class="text-2xl">${icon}</div><div class="text-xs text-gray-600">${minTemp}°/${maxTemp}° ${locationWeatherData.type === 'historical' ? '*' : ''}</div></div>`;
+                            }
+                        }
+                    }
+
                     let noteIcon = '';
                     if (day.notes && day.notes.length > 0) {
                         noteIcon = `<i data-lucide="bell-ring" class="w-4 h-4 text-amber-600"></i>`;
                     }
                     card.innerHTML = `
-                        <div class="flex justify-between items-center">
-                           <div class="flex items-center gap-2">
-                             <p class="text-sm font-semibold text-blue-600">Day ${day.day}</p>
-                             ${noteIcon}
+                        <div class="flex justify-between items-start">
+                           <div class="flex-grow">
+                                <div class="flex items-baseline gap-2">
+                                    <p class="text-sm font-semibold text-blue-600">Day ${day.day}</p>
+                                    <p class="text-xs text-gray-500">${formatDate(day.date)}</p>
+                                    ${noteIcon}
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900 mt-1">${day.theme}</h3>
                            </div>
-                           <p class="text-xs text-gray-500">${formatDate(day.date)}</p>
+                           ${weatherHtml}
                         </div>
-                        <h3 class="text-lg font-bold text-gray-900 mt-1">${day.theme}</h3>
                     `;
-                    itineraryCardsContainer.appendChild(card);
+                    itineraryView.appendChild(card);
                 });
 
-                renderFoodieList();
+                if(isHistorical){
+                    const historicalNote = document.createElement('p');
+                    historicalNote.className = "text-xs text-center text-gray-400 mt-4";
+                    historicalNote.textContent = "* 天氣資訊為去年同期數據，僅供參考。";
+                    itineraryView.appendChild(historicalNote);
+                }
                 lucide.createIcons();
             }
 
-            function renderDetailPage(dayIndex) {
+            function renderDetailPage(dayIndex, weatherByLocation) {
                 const dayData = tripData.itinerary[dayIndex];
                 detailTitle.textContent = `Day ${dayData.day} ${formatDate(dayData.date)}`;
-                detailContent.innerHTML = ''; 
+                let contentHtml = '<div class="p-6">';
+                
+                const locationWeatherData = weatherByLocation[dayData.location];
+                 if (locationWeatherData) {
+                    const dailyData = locationWeatherData.daily;
+                    const weatherIndex = dailyData.time.findIndex(t => t.includes(dayData.date.substring(5)));
+                    if (weatherIndex !== -1) {
+                        const icon = getWeatherIcon(dailyData.weathercode[weatherIndex]);
+                        const maxTemp = Math.round(dailyData.temperature_2m_max[weatherIndex]);
+                        const minTemp = Math.round(dailyData.temperature_2m_min[weatherIndex]);
+                        contentHtml += `
+                            <div class="mb-6 p-4 bg-blue-50 rounded-lg flex items-center gap-4">
+                                <div class="text-4xl">${icon}</div>
+                                <div class="flex-grow">
+                                    <p class="font-bold text-lg text-gray-900">${minTemp}°C / ${maxTemp}°C</p>
+                                    <p class="text-sm text-blue-800">${dayData.location} 天氣預報 ${locationWeatherData.type === 'historical' ? '(去年同期)' : ''}</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+
 
                 // Render notes if they exist
                 if (dayData.notes && dayData.notes.length > 0) {
-                    const notesSection = document.createElement('div');
-                    notesSection.className = 'mb-6 space-y-2';
+                    contentHtml += '<div class="mb-6 space-y-2">';
                     dayData.notes.forEach(note => {
-                        const noteElement = document.createElement('div');
-                        noteElement.className = 'bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-r-lg flex items-start gap-3';
-                        noteElement.innerHTML = `
-                            <div><i data-lucide="alert-triangle" class="w-5 h-5"></i></div>
-                            <p class="text-sm">${note}</p>
+                        contentHtml += `
+                            <div class="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-r-lg flex items-start gap-3">
+                                <div><i data-lucide="alert-triangle" class="w-5 h-5"></i></div>
+                                <p class="text-sm">${note}</p>
+                            </div>
                         `;
-                        notesSection.appendChild(noteElement);
                     });
-                    detailContent.appendChild(notesSection);
+                    contentHtml += '</div>';
                 }
 
                 // Render activities timeline
                 dayData.activities.forEach(activity => {
-                    const activityItem = document.createElement('div');
-                    activityItem.className = 'timeline-item relative pl-10 pb-14';
-                    activityItem.innerHTML = `
-                        <div class="absolute left-0 flex items-center justify-center w-10 h-10">
-                            <div class="w-4 h-4 bg-blue-500 rounded-full border-4 border-white"></div>
+                    contentHtml += `
+                        <div class="timeline-item relative pl-10 pb-14">
+                            <div class="absolute left-0 flex items-center justify-center w-10 h-10">
+                                <div class="w-4 h-4 bg-blue-500 rounded-full border-4 border-white"></div>
+                            </div>
+                            <p class="text-sm font-semibold text-gray-500 mb-1">${activity.time}</p>
+                            <h4 class="font-bold text-lg text-gray-900">${activity.title}</h4>
+                            <p class="text-gray-700 mt-1 mb-3">${activity.description}</p>
+                            <a href="${activity.mapLink}" target="_blank" class="inline-flex items-center gap-2 text-sm text-blue-700 bg-blue-50 p-2 rounded-lg hover:bg-blue-100">
+                                <i data-lucide="tram-front" class="w-4 h-4"></i>
+                                <span>${activity.transport}</span>
+                                <i data-lucide="map-pin" class="w-4 h-4 ml-auto"></i>
+                            </a>
                         </div>
-                        <p class="text-sm font-semibold text-gray-500 mb-1">${activity.time}</p>
-                        <h4 class="font-bold text-lg text-gray-900">${activity.title}</h4>
-                        <p class="text-gray-700 mt-1 mb-3">${activity.description}</p>
-                        <a href="${activity.mapLink}" target="_blank" class="inline-flex items-center gap-2 text-sm text-blue-700 bg-blue-50 p-2 rounded-lg hover:bg-blue-100">
-                            <i data-lucide="tram-front" class="w-4 h-4"></i>
-                            <span>${activity.transport}</span>
-                            <i data-lucide="map-pin" class="w-4 h-4 ml-auto"></i>
-                        </a>
                     `;
-                    detailContent.appendChild(activityItem);
                 });
                 
                 if (dayData.optionalActivities && dayData.optionalActivities.length > 0) {
-                    const optionalSection = document.createElement('div');
-                    optionalSection.className = 'mt-6 pt-6 border-t border-gray-200';
-                    let optionalHtml = `<h4 class="text-lg font-bold mb-4 text-gray-900">彈性選擇</h4><div class="space-y-4">`;
+                    contentHtml += '<div class="mt-6 pt-6 border-t border-gray-200">';
+                    contentHtml += `<h4 class="text-lg font-bold mb-4 text-gray-900">彈性選擇</h4><div class="space-y-4">`;
                     dayData.optionalActivities.forEach(optActivity => {
-                        optionalHtml += `
+                        contentHtml += `
                             <a href="${optActivity.mapLink}" target="_blank" class="flex items-center gap-4 bg-gray-50 p-4 rounded-lg hover:bg-gray-100">
                                 <div class="flex-grow">
                                     <h5 class="font-bold text-gray-800">${optActivity.title}</h5>
@@ -341,46 +479,88 @@
                             </a>
                         `;
                     });
-                    optionalHtml += `</div>`;
-                    optionalSection.innerHTML = optionalHtml;
-                    detailContent.appendChild(optionalSection);
+                    contentHtml += `</div></div>`;
                 }
 
+                contentHtml += '</div>';
+                detailContent.innerHTML = contentHtml;
                 lucide.createIcons();
             }
 
             // --- Page Navigation ---
-            function showDetailPage(dayIndex) {
-                renderDetailPage(dayIndex);
+            function showDetailPage(dayIndex, weatherByLocation) {
+                renderDetailPage(dayIndex, weatherByLocation);
                 detailPage.classList.remove('page-hidden');
+                mainViewContainer.classList.add('hidden');
             }
 
             function hideDetailPage() {
                 detailPage.classList.add('page-hidden');
+                mainViewContainer.classList.remove('hidden');
             }
 
             // --- Event Listeners ---
-            itineraryCardsContainer.addEventListener('click', (e) => {
+            itineraryView.addEventListener('click', (e) => {
                 const card = e.target.closest('[data-day-index]');
                 if (card) {
-                    showDetailPage(card.dataset.dayIndex);
+                    showDetailPage(card.dataset.dayIndex, window.weatherByLocation);
                 }
             });
 
             backButton.addEventListener('click', hideDetailPage);
 
-            foodieListContainer.addEventListener('click', (e) => {
-                if (e.target.type === 'checkbox') {
+            document.getElementById('app-container').addEventListener('click', (e) => {
+                if (e.target.type === 'checkbox' && e.target.id.startsWith('food-')) {
                     const foodIndex = parseInt(e.target.dataset.foodIndex, 10);
                     tripData.foodieList[foodIndex].eaten = e.target.checked;
-                    const label = e.target.nextElementSibling;
-                    label.classList.toggle('line-through', e.target.checked);
-                    label.classList.toggle('text-gray-500', e.target.checked);
+                    
+                    const allLabels = document.querySelectorAll(`label[for="food-${foodIndex}"]`);
+                    allLabels.forEach(label => {
+                       label.classList.toggle('line-through', e.target.checked);
+                       label.classList.toggle('text-gray-500', e.target.checked);
+                    });
                 }
             });
+            
+            function switchTab(activeTab) {
+                const navButtons = {
+                    itinerary: navItinerary,
+                    foodie: navFoodie
+                };
+                const views = {
+                    itinerary: itineraryView,
+                    foodie: foodieView
+                };
+
+                Object.keys(views).forEach(key => {
+                    if (key === activeTab) {
+                        views[key].classList.remove('hidden');
+                        navButtons[key].classList.add('text-blue-600');
+                        navButtons[key].querySelector('span').classList.add('font-semibold');
+                        navButtons[key].classList.remove('text-gray-500');
+                    } else {
+                        views[key].classList.add('hidden');
+                        navButtons[key].classList.add('text-gray-500');
+                        navButtons[key].classList.remove('text-blue-600');
+                        navButtons[key].querySelector('span').classList.remove('font-semibold');
+                    }
+                });
+            }
+
+            navItinerary.addEventListener('click', () => switchTab('itinerary'));
+            navFoodie.addEventListener('click', () => switchTab('foodie'));
+
 
             // --- Initial Render ---
-            renderMainPage();
+            async function initialize() {
+                mainTitle.textContent = tripData.tripTitle;
+                window.weatherByLocation = await fetchAllWeatherData(tripData.locations, tripData.itinerary);
+                renderItinerary(window.weatherByLocation);
+                renderFoodieList();
+                lucide.createIcons();
+            }
+
+            initialize();
         });
     </script>
 </body>
