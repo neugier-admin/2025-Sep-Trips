@@ -50,6 +50,12 @@
             height: 20px;
             animation: spin 1s linear infinite;
         }
+        .food-card.eaten {
+            opacity: 0.6;
+        }
+        .food-card.eaten .food-name {
+            text-decoration: line-through;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -100,15 +106,10 @@
         <!-- Coupon Modal -->
         <div id="coupon-modal" class="fixed inset-0 bg-black bg-opacity-75 z-40 flex items-center justify-center p-4 hidden">
             <div class="relative bg-white rounded-lg max-w-lg w-full">
-                <img id="modal-coupon-image" src="" alt="優惠券大圖" class="w-full h-auto rounded-t-lg">
+                <img id="modal-coupon-image" src="" alt="優惠券大圖" class="w-full h-auto rounded-lg">
                 <button id="modal-close-button" class="absolute top-2 right-2 bg-white rounded-full p-1 text-gray-700 hover:bg-gray-200">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
-                <div class="p-4">
-                     <a id="modal-coupon-link" href="#" target="_blank" class="block w-full bg-blue-600 text-white text-center font-bold py-3 rounded-lg hover:bg-blue-700 transition-colors">
-                        前往優惠券網站
-                    </a>
-                </div>
             </div>
         </div>
 
@@ -181,8 +182,8 @@
                     {"time": "當日住宿", "title": "東橫INN 大阪梅田東", "description": "旅程第三至十日的下榻酒店。", "transport": "位於梅田東地區，鄰近地鐵站。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Toyoko+Inn+Osaka+Umeda+Higashi"},
                     {"time": "清晨 (7:00)", "title": "提早出發，搶佔先機", "description": "預計7點到達USJ門口排隊，開園後第一時間衝去排『SPY x FAMILY 秘密任務 4D』。", "transport": "從『東梅田站』搭乘谷町線到『天王寺站』，轉乘JR大阪環狀線到『西九条站』，再轉乘JR櫻島線到『環球影城站』(總程約40分鐘)。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Universal+Studios+Japan"},
                     {"time": "11:10 - 12:10", "title": "Express Pass: 超級任天堂世界™", "description": "根據Express Pass時間準時進入園區！先玩 11:10-11:40 的「瑪利歐賽車」，再玩 11:40-12:10 的「森喜剛的瘋狂纜車」。", "transport": "園區內步行。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Super+Nintendo+World+Japan"},
-                    {"time": "中午", "title": "午餐 & 經典園區", "description": "在園區內享用午餐。餐後可以去玩時間彈性的「大白鯊」或「侏羅紀公園・乘船遊」。", "transport": "園區內步行。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Universal+Studios+Japan"},
-                    {"time": "14:40 - 15:30", "title": "Express Pass: 哈利波特的魔法世界™", "description": "根據Express Pass時間準時進入園區！在 15:00-15:30 期間體驗「哈利波特禁忌之旅™」。", "transport": "園區內步行。", "mapLink": "https://www.google.com/maps/search/?api=1&query=The+Wizarding+World+of+Harry+Potter+Osaka"},
+                    {"time": "中午", "title": "午餐 & 經典園區", "description": "在園區內享用午餐。餐後可以去玩時間彈性的「大白鯊」或「侏邏紀公園・乘船遊」。", "transport": "園區內步行。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Universal+Studios+Japan"},
+                    {"time": "14:40 - 15:30", "title": "Express Pass: 哈利波特的魔法世界™", "description": "根據Express Pass時間準時進入園區！在 15:00-15:30 期間體驗「哈利波特禁忌之旅™」。", "transport": "园區內步行。", "mapLink": "https://www.google.com/maps/search/?api=1&query=The+Wizarding+World+of+Harry+Potter+Osaka"},
                     {"time": "傍晚 (18:00 後)", "title": "Halloween Horror Nights & ゾンビ・デ・ダンス", "description": "入夜後，準備迎接萬聖節恐怖之夜！在園區各處與喪屍不期而遇，並欣賞熱力四射的『ゾンビ・デ・ダンス』(喪屍群舞) 表演。", "transport": "園區內步行。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Universal+Studios+Japan"}
                   ],
                   "optionalActivities": [
@@ -196,7 +197,7 @@
                     {"time": "當日住宿", "title": "東橫INN 大阪梅田東", "description": "旅程第三至十日的下榻酒店。", "transport": "位於梅田東地區，鄰近地鐵站。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Toyoko+Inn+Osaka+Umeda+Higashi"},
                     {"time": "上午", "title": "前往京都 & 清水寺道", "description": "從酒店出發，前往清水寺。參拜完宏偉嘅清水舞台後，沿住充滿古都風情嘅二年坂、三年坂石板路慢慢行落山。", "transport": "由「大阪/梅田站」搭乘 JR京都線新快速，約30分鐘直達「京都站」，再轉乘巴士前往 (約15分鐘)。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Kiyomizu-dera+Temple"},
                     {"time": "中午", "title": "祇園・花見小路", "description": "順路行到八坂神社，然後進入祇園地區。你可以喺花見小路感受藝妓文化嘅氛圍，並喺附近搵間餐廳食午餐。", "transport": "從清水寺步行前往 (約20分鐘)。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Gion+Hanamikoji"},
-                    {"time": "傍晚", "title": "返回大阪", "description": "在京都食完晚飯，或者返到大阪再食，然後返酒店休息。", "transport": "從「近鐵京都站」搭乘近鐵特急返回「大阪難波站」(約2小時)，再轉地鐵回梅田。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Kyoto+Station"}
+                    {"time": "傍晚", "title": "返回大阪", "description": "在京都食完晚飯，或者返到大阪再食，然後返酒店休息。", "transport": "從『近鐵京都站』搭乘急行，於『大和西大寺』轉車往『大阪難波』(總程約50-60分鐘，Pass適用)。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Kyoto+Station"}
                   ],
                    "optionalActivities": [
                     {"title": "錦市場", "description": "如果時間許可，可以去感受「京都嘅廚房」嘅熱鬧氣氛，食下小食。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Nishiki+Market"}
@@ -207,7 +208,7 @@
                   "activities": [
                     {"time": "上午", "title": "前往伊勢", "description": "在大阪梅田酒店 Check-out，寄存大件行李。輕裝前往「大阪難波站」。", "transport": "用 Pass 換領【第一張特急券】，搭乘近鐵特急直達「宇治山田站」(約1小時50分鐘)。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Ujiyamada+Station"},
                     {"time": "下午", "title": "伊勢神宮參拜", "description": "參拜伊勢神宮 (外宮及內宮)，並喺「托福橫丁」享受美食。", "transport": "搭乘巴士或步行。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Ise+Grand+Shrine"},
-                    {"time": "夜晚", "title": "前往伊賀上野 & 入住", "description": "從伊勢出發，前往伊賀上野的酒店辦理入住，為明日的忍者修行做準備。", "transport": "從『宇治山田站』搭乘近鐵到『伊賀神戸站』(約1小時)，再轉乘伊賀鐵道到『上野市站』(約25分鐘)。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Uenoshi+Station"}
+                    {"time": "夜晚", "title": "入住: 伊賀上野シティホテル", "description": "從伊勢出發，前往伊賀上野的酒店辦理入住，為明日的忍者修行做準備。", "transport": "從『宇治山田站』搭乘近鐵到『伊賀神戸站』(約1小時)，再轉乘伊賀鐵道到『上野市站』(約25分鐘)。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Iga+Ueno+City+Hotel"}
                   ]
                 },
                 {
@@ -223,6 +224,7 @@
                   "day": 9, "date": "2025-09-21", "theme": "水都くらわんか花火大会", "location": "Osaka",
                   "notes": ["注意：花火大會的確切舉辦日期和時間，請在出發前再次到官方網站確認。"],
                   "activities": [
+                    {"time": "當日住宿", "title": "東橫INN 大阪梅田東", "description": "旅程第三至十日的下榻酒店。", "transport": "位於梅田東地區，鄰近地鐵站。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Toyoko+Inn+Osaka+Umeda+Higashi"},
                     {"time": "中午", "title": "返回大阪", "description": "在名古屋悠閒渡過上午後 Check-out。換領【第三張特急券】，搭乘豪華特急「ひのとり (Hinotori)」返回「大阪難波站」(約2小時)。", "transport": "近鐵豪華特急 ひのとり。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Osaka-Namba+Station"},
                     {"time": "下午", "title": "返回梅田酒店", "description": "返到梅田嘅原酒店攞返行李並 Check-in，稍作休息。", "transport": "從『難波站』搭乘御堂筋線到『梅田站』(約8分鐘)。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Toyoko+Inn+Osaka+Umeda+Higashi"},
                     {"time": "傍晚", "title": "水都くらわんか花火大会", "description": "前往淀川河川公園，欣賞在河岸綻放的盛大煙花，為旅程增添浪漫回憶。", "transport": "從 JR『大阪站』搭乘JR京都線到『高槻站』(約15分鐘)後步行。", "mapLink": "https://www.google.com/maps/search/?api=1&query=Yodogawa+Kasen+Park+Hirakata"}
@@ -239,11 +241,11 @@
                 }
               ],
               "foodieList": [
-                {"name": "りくろーおじさんの店 (老爺爺起司蛋糕)", "eaten": false, "mapLink": "https://www.google.com/maps/search/?api=1&query=りくろーおじさんの店+なんば本店"},
-                {"name": "元祖串炸達摩", "eaten": false, "mapLink": "https://www.google.com/maps/search/?api=1&query=元祖串かつ+だるま+新世界総本店"},
-                {"name": "HARBS 水果千層蛋糕", "eaten": false, "mapLink": "https://www.google.com/maps/search/?api=1&query=HARBS+大丸心斎橋店"},
-                {"name": "一蘭拉麵 (道頓堀店)", "eaten": false, "mapLink": "https://www.google.com/maps/search/?api=1&query=Ichiran+Dotonbori"},
-                {"name": "きじ - 大阪燒 (梅田)", "eaten": false, "mapLink": "https://www.google.com/maps/search/?api=1&query=Okonomiyaki+Kiji+Umeda"}
+                {"name": "りくろーおじさんの店 (老爺爺起司蛋糕)", "eaten": false, "mapLink": "https://www.google.com/maps/search/?api=1&query=Rikuro+Ojisan+no+Mise+Namba", "imageUrl": "https://live.staticflickr.com/7325/12522730534_86638c3e1e_b.jpg", "region": "Namba"},
+                {"name": "元祖串炸達摩", "eaten": false, "mapLink": "https://www.google.com/maps/search/?api=1&query=Ganso+Kushikatsu+Daruma+Shinsekai", "imageUrl": "https://live.staticflickr.com/7836/47517616921_5081198544_b.jpg", "region": "Namba"},
+                {"name": "HARBS 水果千層蛋糕", "eaten": false, "mapLink": "https://www.google.com/maps/search/?api=1&query=HARBS+Daimaru+Shinsaibashi", "imageUrl": "https://live.staticflickr.com/65535/51227577546_5527613589_b.jpg", "region": "Namba"},
+                {"name": "一蘭拉麵 (道頓堀店)", "eaten": false, "mapLink": "https://www.google.com/maps/search/?api=1&query=Ichiran+Ramen+Dotonbori", "imageUrl": "https://live.staticflickr.com/65535/50934663252_a563917a02_b.jpg", "region": "Namba"},
+                {"name": "きじ - 大阪燒 (梅田)", "eaten": false, "mapLink": "https://www.google.com/maps/search/?api=1&query=Okonomiyaki+Kiji+Umeda", "imageUrl": "https://live.staticflickr.com/8159/7442144856_15b5e7db03_b.jpg", "region": "Umeda"}
               ],
               "coupons": [
                 { "name": "Bic Camera", "discount": "滿額免稅，最高再折7%", "expiry": "2025/8/31", "link": "https://funtime.tw/c/blog-68172-1", "final_url": "https://www.funtime.com.tw/travelstore/coupon/BicCamera_vertical.jpg", "category": "電器" },
@@ -355,46 +357,56 @@
             // --- Render Functions ---
 
             function renderFoodieList() {
-                const nambaFood = tripData.foodieList.filter(item => !item.mapLink.toLowerCase().includes('umeda'));
-                const umedaFood = tripData.foodieList.filter(item => item.mapLink.toLowerCase().includes('umeda'));
+                const nambaFood = tripData.foodieList.filter(item => item.region === 'Namba');
+                const umedaFood = tripData.foodieList.filter(item => item.region === 'Umeda');
                 
-                let html = '';
+                foodieView.innerHTML = ''; // Clear previous content
 
-                if (nambaFood.length > 0) {
-                    html += `<h3 class="text-lg font-bold text-gray-800">難波・心齋橋</h3><div class="space-y-3 mt-2">`;
-                    nambaFood.forEach(item => {
+                const createSection = (title, items) => {
+                    if (items.length === 0) return;
+
+                    const titleEl = document.createElement('h3');
+                    titleEl.className = "text-xl font-bold text-gray-900 mb-4";
+                    titleEl.textContent = title;
+                    foodieView.appendChild(titleEl);
+
+                    const gridContainer = document.createElement('div');
+                    gridContainer.className = "grid grid-cols-1 gap-4";
+                    
+                    items.forEach(item => {
                         const originalIndex = tripData.foodieList.indexOf(item);
-                        html += `
-                            <div class="flex items-center bg-gray-100 p-3 rounded-lg">
-                                <input type="checkbox" id="food-${originalIndex}" data-food-index="${originalIndex}" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" ${item.eaten ? 'checked' : ''}>
-                                <label for="food-${originalIndex}" class="ml-3 text-gray-800 flex-grow ${item.eaten ? 'line-through text-gray-500' : ''}">${item.name}</label>
-                                <a href="${item.mapLink}" target="_blank" class="p-2 rounded-full hover:bg-gray-200">
-                                    <i data-lucide="map-pin" class="w-5 h-5 text-gray-600"></i>
+                        const card = document.createElement('div');
+                        card.className = `food-card flex items-center bg-white border rounded-xl shadow-sm overflow-hidden transition-opacity ${item.eaten ? 'eaten' : ''}`;
+                        card.dataset.foodIndex = originalIndex;
+
+                        card.innerHTML = `
+                            <img src="${item.imageUrl}" alt="${item.name}" class="w-24 h-24 object-cover flex-shrink-0" onerror="this.onerror=null;this.src='https://placehold.co/100x100/cccccc/ffffff?text=Image+Not+Found';">
+                            <div class="p-4 flex-grow">
+                                <h4 class="font-bold text-gray-800 food-name">${item.name}</h4>
+                                <a href="${item.mapLink}" target="_blank" class="text-xs text-blue-600 hover:underline inline-flex items-center gap-1 mt-1">
+                                    <i data-lucide="map-pin" class="w-3 h-3"></i>
+                                    在地圖上查看
                                 </a>
                             </div>
+                            <button class="flex-shrink-0 w-16 h-16 flex items-center justify-center text-gray-300 hover:text-blue-500 transition-colors foodie-checkbox">
+                                <i data-lucide="${item.eaten ? 'check-circle-2' : 'circle'}" class="w-8 h-8 ${item.eaten ? 'text-blue-600' : ''}"></i>
+                            </button>
                         `;
+                        gridContainer.appendChild(card);
                     });
-                    html += `</div>`;
-                }
+                    foodieView.appendChild(gridContainer);
+                };
 
+                createSection('難波・心齋橋', nambaFood);
+                
                 if (umedaFood.length > 0) {
-                    html += `<h3 class="text-lg font-bold text-gray-800 mt-6">梅田</h3><div class="space-y-3 mt-2">`;
-                    umedaFood.forEach(item => {
-                        const originalIndex = tripData.foodieList.indexOf(item);
-                        html += `
-                            <div class="flex items-center bg-gray-100 p-3 rounded-lg">
-                                <input type="checkbox" id="food-${originalIndex}" data-food-index="${originalIndex}" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" ${item.eaten ? 'checked' : ''}>
-                                <label for="food-${originalIndex}" class="ml-3 text-gray-800 flex-grow ${item.eaten ? 'line-through text-gray-500' : ''}">${item.name}</label>
-                                <a href="${item.mapLink}" target="_blank" class="p-2 rounded-full hover:bg-gray-200">
-                                    <i data-lucide="map-pin" class="w-5 h-5 text-gray-600"></i>
-                                </a>
-                            </div>
-                        `;
-                    });
-                    html += `</div>`;
+                    const separator = document.createElement('div');
+                    separator.className = "pt-6";
+                    foodieView.appendChild(separator);
+                    createSection('梅田', umedaFood);
                 }
 
-                foodieView.innerHTML = html;
+                lucide.createIcons();
             }
 
             async function renderItinerary(weatherByLocation) {
@@ -566,7 +578,7 @@
                             card.className = 'bg-white border rounded-xl overflow-hidden shadow-sm flex flex-col cursor-pointer coupon-card';
                             card.dataset.finalUrl = coupon.final_url;
                             
-                            const isImageUrl = /\.(jpeg|jpg|gif|png|webp|pdf)$/i.test(coupon.final_url);
+                            const isImageUrl = /\.(jpeg|jpg|gif|png|webp|pdf)(\?.*)?$/i.test(coupon.final_url);
                             const iconHtml = isImageUrl 
                                 ? `<i data-lucide="image" class="w-4 h-4 text-gray-400"></i>`
                                 : `<i data-lucide="link-2" class="w-4 h-4 text-gray-400"></i>`;
@@ -630,10 +642,9 @@
                 const card = e.target.closest('.coupon-card');
                 if (card) {
                     const url = card.dataset.finalUrl;
-                    const isImageUrl = /\.(jpeg|jpg|gif|png|webp|pdf)$/i.test(url);
+                    const isImageUrl = /\.(jpeg|jpg|gif|png|webp|pdf)(\?.*)?$/i.test(url);
                     if (isImageUrl) {
                         modalImage.src = url;
-                        modalLink.href = url;
                         couponModal.classList.remove('hidden');
                     } else {
                         window.open(url, '_blank');
@@ -651,16 +662,25 @@
                 }
             });
 
-            document.getElementById('app-container').addEventListener('click', (e) => {
-                if (e.target.type === 'checkbox' && e.target.id.startsWith('food-')) {
-                    const foodIndex = parseInt(e.target.dataset.foodIndex, 10);
-                    tripData.foodieList[foodIndex].eaten = e.target.checked;
-                    
-                    const allLabels = document.querySelectorAll(`label[for="food-${foodIndex}"]`);
-                    allLabels.forEach(label => {
-                       label.classList.toggle('line-through', e.target.checked);
-                       label.classList.toggle('text-gray-500', e.target.checked);
-                    });
+            foodieView.addEventListener('click', (e) => {
+                const checkbox = e.target.closest('.foodie-checkbox');
+                if (checkbox) {
+                    const card = checkbox.closest('.food-card');
+                    if (card) { 
+                        const foodIndex = parseInt(card.dataset.foodIndex, 10);
+                        const item = tripData.foodieList[foodIndex];
+                        item.eaten = !item.eaten;
+                        
+                        card.classList.toggle('eaten', item.eaten);
+                        const icon = checkbox.querySelector('i');
+                        icon.dataset.lucide = item.eaten ? 'check-circle-2' : 'circle';
+                        if (item.eaten) {
+                            icon.classList.add('text-blue-600');
+                        } else {
+                            icon.classList.remove('text-blue-600');
+                        }
+                        lucide.createIcons();
+                    }
                 }
             });
             
@@ -684,12 +704,10 @@
                         view.classList.remove('hidden');
                         button.classList.add('text-blue-600');
                         button.classList.remove('text-gray-500');
-                        button.querySelector('span')?.classList.add('font-semibold');
                     } else {
                         view.classList.add('hidden');
                         button.classList.add('text-gray-500');
                         button.classList.remove('text-blue-600');
-                        button.querySelector('span')?.classList.remove('font-semibold');
                     }
                 });
             }
