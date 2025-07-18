@@ -67,18 +67,20 @@
             <main class="pt-20 pb-20 flex-grow overflow-y-auto p-6">
                 <section id="itinerary-view" class="space-y-4"></section>
                 <section id="foodie-view" class="hidden space-y-6"></section>
+                <section id="coupon-view" class="hidden space-y-6"></section>
             </main>
             
             <!-- Bottom Navigation -->
             <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg bg-white/90 backdrop-blur-sm border-t border-gray-200 z-20">
                  <div class="flex justify-around">
-                    <button id="nav-itinerary" class="flex flex-col items-center justify-center text-blue-600 p-3 w-1/2">
-                        <i data-lucide="list-ordered" class="w-6 h-6"></i>
-                        <span class="text-xs font-semibold">行程</span>
+                    <button id="nav-itinerary" class="flex flex-col items-center justify-center text-blue-600 p-4 w-1/3">
+                        <i data-lucide="list-ordered" class="w-7 h-7"></i>
                     </button>
-                    <button id="nav-foodie" class="flex flex-col items-center justify-center text-gray-500 p-3 w-1/2">
-                        <i data-lucide="utensils-crossed" class="w-6 h-6"></i>
-                        <span class="text-xs">美食</span>
+                    <button id="nav-foodie" class="flex flex-col items-center justify-center text-gray-500 p-4 w-1/3">
+                        <i data-lucide="utensils-crossed" class="w-7 h-7"></i>
+                    </button>
+                    <button id="nav-coupon" class="flex flex-col items-center justify-center text-gray-500 p-4 w-1/3">
+                        <i data-lucide="ticket" class="w-7 h-7"></i>
                     </button>
                 </div>
             </nav>
@@ -93,6 +95,21 @@
                 <h2 id="detail-title" class="text-lg font-bold text-center text-gray-900 flex-grow truncate px-2"></h2>
             </header>
             <div id="detail-content" class="flex-grow overflow-y-auto"></div>
+        </div>
+        
+        <!-- Coupon Modal -->
+        <div id="coupon-modal" class="fixed inset-0 bg-black bg-opacity-75 z-40 flex items-center justify-center p-4 hidden">
+            <div class="relative bg-white rounded-lg max-w-lg w-full">
+                <img id="modal-coupon-image" src="" alt="優惠券大圖" class="w-full h-auto rounded-t-lg">
+                <button id="modal-close-button" class="absolute top-2 right-2 bg-white rounded-full p-1 text-gray-700 hover:bg-gray-200">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+                <div class="p-4">
+                     <a id="modal-coupon-link" href="#" target="_blank" class="block w-full bg-blue-600 text-white text-center font-bold py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                        前往優惠券網站
+                    </a>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -227,6 +244,27 @@
                 {"name": "HARBS 水果千層蛋糕", "eaten": false, "mapLink": "https://www.google.com/maps/search/?api=1&query=HARBS+大丸心斎橋店"},
                 {"name": "一蘭拉麵 (道頓堀店)", "eaten": false, "mapLink": "https://www.google.com/maps/search/?api=1&query=Ichiran+Dotonbori"},
                 {"name": "きじ - 大阪燒 (梅田)", "eaten": false, "mapLink": "https://www.google.com/maps/search/?api=1&query=Okonomiyaki+Kiji+Umeda"}
+              ],
+              "coupons": [
+                { "name": "Bic Camera", "discount": "滿額免稅，最高再折7%", "expiry": "2025/8/31", "link": "https://funtime.tw/c/blog-68172-1", "final_url": "https://www.funtime.com.tw/travelstore/coupon/BicCamera_vertical.jpg", "category": "電器" },
+                { "name": "Salonia", "discount": "折5%(需與Bic Camera優惠券一起使用)", "expiry": "2025/8/31", "link": "https://funtime.tw/c/blog-68172-19", "final_url": "https://www.funtime.com.tw/travelstore/coupon/Salonia_250415.jpg?ftfrom=blog-68172-19", "category": "電器" },
+                { "name": "愛電王Edion", "discount": "滿額免稅，最高再折7%", "expiry": "2026/12/31", "link": "https://funtime.tw/c/blog-68172-10", "final_url": "https://www.funtime.com.tw/travelstore/coupon/edion2025.jpg", "category": "電器" },
+                { "name": "Laox", "discount": "滿額免稅，再折8%", "expiry": "2025/12/31", "link": "https://funtime.tw/c/blog-68172-15", "final_url": "https://www.funtime.com.tw/travelstore/coupon/LAOX_2025.jpg", "category": "電器" },
+                { "name": "SUNDRUG", "discount": "滿額免稅，再享3~7%折扣", "expiry": "無期限", "link": "https://funtime.tw/c/b2s50T", "final_url": "https://www.funtime.com.tw/travelstore/coupon/sundrug%20_funtime.jpg", "category": "藥妝" },
+                { "name": "鶴羽藥妝", "discount": "滿額免稅，最高享免稅+7%優惠", "expiry": "2025/12/31", "link": "https://funtime.tw/c/blog-68172-11", "final_url": "https://www.funtime.com.tw/travelstore/coupon/tsuruha2025.jpg", "category": "藥妝" },
+                { "name": "札幌藥妝", "discount": "滿額免稅，最高享免稅+5%優惠", "expiry": "無期限", "link": "https://funtime.tw/c/blog-68172-13", "final_url": "https://www.funtime.com.tw/travelstore/coupon/sapporo.jpg", "category": "藥妝" },
+                { "name": "Cosmos", "discount": "滿額免稅，最高享免稅+9%優惠", "expiry": "2025/12/31", "link": "https://funtime.tw/c/DsrcXF", "final_url": "https://www.funtime.com.tw/travelstore/coupon/cosmos2025.jpg", "category": "藥妝" },
+                { "name": "近鐵百貨店", "discount": "滿2千日圓(不含稅)，可享有95折優惠", "expiry": "2025/12/31", "link": "https://funtime.tw/c/blog-68172-14", "final_url": "https://www.funtime.com.tw/travelstore/coupon/kintetsu2025.png", "category": "百貨", "region": "關西" },
+                { "name": "大丸松坂屋", "discount": "單筆消費含稅滿3千日圓，享95折", "expiry": "2025/8/31", "link": "https://funtime.tw/c/blog-68172-6", "final_url": "https://www.funtime.com.tw/travelstore/coupon/daimaru_2.pdf", "category": "百貨" },
+                { "name": "西武百貨", "discount": "消費滿1千日圓，享95折", "expiry": "2025/12/31", "link": "https://funtime.tw/c/blog-68172-2", "final_url": "https://www.funtime.com.tw/travelstore/coupon/seibu2025.png", "category": "百貨" },
+                { "name": "名古屋名鐵百貨店", "discount": "免稅再折5%", "expiry": "2026/2/28", "link": "https://funtime.tw/c/blog-68172-18", "final_url": "https://www.funtime.com.tw/travelstore/coupon/meitetsu_250516.png", "category": "百貨", "region": "名古屋" },
+                { "name": "京王百貨", "discount": "單筆消費滿3千日圓，享95折", "expiry": "2026/03/31", "link": "https://funtime.tw/c/blog-68172-3", "final_url": "https://www.funtime.com.tw/travelstore/coupon/Keio_2.jpeg", "category": "百貨", "region": "東京" },
+                { "name": "小田急百貨", "discount": "消費滿1千日圓(含稅)，可享6%優惠", "expiry": "2028/3/31", "link": "https://funtime.tw/c/blog-68172-12", "final_url": "https://www.funtime.com.tw/travelstore/coupon/odakyu.png", "category": "百貨", "region": "東京" },
+                { "name": "Donki唐吉訶德", "discount": "滿額免稅，再折5%", "expiry": "無期限", "link": "https://funtime.tw/c/blog-68172-9", "final_url": "https://japanportal.donki-global.com/coupon/?ptcd=0076003303", "category": "綜合/免稅" },
+                { "name": "銀座樂天免稅店", "discount": "滿1萬日圓折1千，滿2萬折2千", "expiry": "2026/1/31", "link": "https://funtime.tw/c/blog-68172-7", "final_url": "https://www.funtime.com.tw/travelstore/coupon/Lottedutyfree_GINZA_FunTime2025.jpg", "category": "綜合/免稅", "region": "東京" },
+                { "name": "成田機場免稅店", "discount": "享有95折優惠", "expiry": "2026/3/31", "link": "https://funtime.tw/c/blog-68172-16", "final_url": "https://duty-free-japan.jp/narita/ta/content/coupon2833-30.html", "category": "綜合/免稅", "region": "東京" },
+                { "name": "成田/羽田機場 免稅商品線上訂", "discount": "享有95折優惠", "expiry": "無期限", "link": "https://funtime.tw/c/blog-68172-17", "final_url": "https://duty-free-japan.jp/qrposter/tc/?agentid=123", "category": "綜合/免稅", "region": "東京" },
+                { "name": "Victoria運動用品", "discount": "免稅再折5%", "expiry": "2026/6/30", "link": "https://funtime.tw/c/blog-68172-8", "final_url": "https://www.funtime.com.tw/travelstore/coupon/FunTime_Victoria_202606.jpg", "category": "其他" }
               ]
             };
 
@@ -236,11 +274,17 @@
             const mainTitle = document.getElementById('main-title');
             const itineraryView = document.getElementById('itinerary-view');
             const foodieView = document.getElementById('foodie-view');
+            const couponView = document.getElementById('coupon-view');
             const detailTitle = document.getElementById('detail-title');
             const detailContent = document.getElementById('detail-content');
             const backButton = document.getElementById('back-button');
             const navItinerary = document.getElementById('nav-itinerary');
             const navFoodie = document.getElementById('nav-foodie');
+            const navCoupon = document.getElementById('nav-coupon');
+            const couponModal = document.getElementById('coupon-modal');
+            const modalImage = document.getElementById('modal-coupon-image');
+            const modalLink = document.getElementById('modal-coupon-link');
+            const modalCloseButton = document.getElementById('modal-close-button');
             
             // --- Helper Functions ---
             function formatDate(dateString) {
@@ -486,6 +530,79 @@
                 detailContent.innerHTML = contentHtml;
                 lucide.createIcons();
             }
+            
+            function renderCoupons(){
+                const couponContainer = document.getElementById('coupon-view');
+                couponContainer.innerHTML = '';
+                const groupedCoupons = tripData.coupons.reduce((acc, coupon) => {
+                    if (!acc[coupon.category]) {
+                        acc[coupon.category] = [];
+                    }
+                    acc[coupon.category].push(coupon);
+                    return acc;
+                }, {});
+
+                const categoryOrder = ["電器", "藥妝", "百貨", "綜合/免稅", "其他"];
+                const categoryIcons = {
+                    "電器": "plug-zap",
+                    "藥妝": "pilcrow",
+                    "百貨": "shopping-bag",
+                    "綜合/免稅": "gem",
+                    "其他": "shopping-cart"
+                };
+
+                categoryOrder.forEach(category => {
+                    if (groupedCoupons[category]) {
+                        const categoryTitle = document.createElement('h3');
+                        categoryTitle.className = "text-lg font-bold text-gray-800 flex items-center gap-2";
+                        categoryTitle.innerHTML = `<i data-lucide="${categoryIcons[category]}" class="w-5 h-5"></i> ${category}`;
+                        couponContainer.appendChild(categoryTitle);
+
+                        const gridContainer = document.createElement('div');
+                        gridContainer.className = "grid grid-cols-1 md:grid-cols-2 gap-4 mt-2";
+                        
+                        groupedCoupons[category].forEach(coupon => {
+                            const card = document.createElement('div');
+                            card.className = 'bg-white border rounded-xl overflow-hidden shadow-sm flex flex-col cursor-pointer coupon-card';
+                            card.dataset.finalUrl = coupon.final_url;
+                            
+                            const isImageUrl = /\.(jpeg|jpg|gif|png|webp|pdf)$/i.test(coupon.final_url);
+                            const iconHtml = isImageUrl 
+                                ? `<i data-lucide="image" class="w-4 h-4 text-gray-400"></i>`
+                                : `<i data-lucide="link-2" class="w-4 h-4 text-gray-400"></i>`;
+                            
+                            const regionTag = coupon.region ? `<span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">${coupon.region}</span>` : '';
+
+                            card.innerHTML = `
+                                <div class="p-4 flex-grow flex flex-col pointer-events-none">
+                                    <div class="flex items-center gap-2 mb-1">
+                                       <h3 class="font-bold text-lg text-gray-800">${coupon.name}</h3>
+                                    </div>
+                                    <p class="text-sm text-gray-600 mt-1 flex-grow">${coupon.discount}</p>
+                                    <div class="flex justify-between items-center text-xs text-gray-400 mt-2">
+                                        <div class="flex items-center gap-2">
+                                            <span>有效期限: ${coupon.expiry}</span>
+                                            ${regionTag}
+                                        </div>
+                                        ${iconHtml}
+                                    </div>
+                                </div>
+                            `;
+                            gridContainer.appendChild(card);
+                        });
+                        couponContainer.appendChild(gridContainer);
+                    }
+                });
+
+
+                const sourceRemark = document.createElement('div');
+                sourceRemark.className = 'md:col-span-2 text-center text-xs text-gray-400 mt-6';
+                sourceRemark.innerHTML = `
+                    source from : <a href="https://www.funtime.com.tw/blog/funtime/japan-coupon" target="_blank" rel="noopener noreferrer" class="underline hover:text-gray-600">https://www.funtime.com.tw/blog/funtime/japan-coupon</a>
+                `;
+                couponContainer.appendChild(sourceRemark);
+                lucide.createIcons();
+            }
 
             // --- Page Navigation ---
             function showDetailPage(dayIndex, weatherByLocation) {
@@ -509,6 +626,31 @@
 
             backButton.addEventListener('click', hideDetailPage);
 
+            couponView.addEventListener('click', (e) => {
+                const card = e.target.closest('.coupon-card');
+                if (card) {
+                    const url = card.dataset.finalUrl;
+                    const isImageUrl = /\.(jpeg|jpg|gif|png|webp|pdf)$/i.test(url);
+                    if (isImageUrl) {
+                        modalImage.src = url;
+                        modalLink.href = url;
+                        couponModal.classList.remove('hidden');
+                    } else {
+                        window.open(url, '_blank');
+                    }
+                }
+            });
+
+            modalCloseButton.addEventListener('click', () => {
+                couponModal.classList.add('hidden');
+            });
+
+            couponModal.addEventListener('click', (e) => {
+                if (e.target === couponModal) {
+                    couponModal.classList.add('hidden');
+                }
+            });
+
             document.getElementById('app-container').addEventListener('click', (e) => {
                 if (e.target.type === 'checkbox' && e.target.id.startsWith('food-')) {
                     const foodIndex = parseInt(e.target.dataset.foodIndex, 10);
@@ -525,30 +667,36 @@
             function switchTab(activeTab) {
                 const navButtons = {
                     itinerary: navItinerary,
-                    foodie: navFoodie
+                    foodie: navFoodie,
+                    coupon: navCoupon
                 };
                 const views = {
                     itinerary: itineraryView,
-                    foodie: foodieView
+                    foodie: foodieView,
+                    coupon: couponView
                 };
 
                 Object.keys(views).forEach(key => {
+                    const button = navButtons[key];
+                    const view = views[key];
+                    
                     if (key === activeTab) {
-                        views[key].classList.remove('hidden');
-                        navButtons[key].classList.add('text-blue-600');
-                        navButtons[key].querySelector('span').classList.add('font-semibold');
-                        navButtons[key].classList.remove('text-gray-500');
+                        view.classList.remove('hidden');
+                        button.classList.add('text-blue-600');
+                        button.classList.remove('text-gray-500');
+                        button.querySelector('span')?.classList.add('font-semibold');
                     } else {
-                        views[key].classList.add('hidden');
-                        navButtons[key].classList.add('text-gray-500');
-                        navButtons[key].classList.remove('text-blue-600');
-                        navButtons[key].querySelector('span').classList.remove('font-semibold');
+                        view.classList.add('hidden');
+                        button.classList.add('text-gray-500');
+                        button.classList.remove('text-blue-600');
+                        button.querySelector('span')?.classList.remove('font-semibold');
                     }
                 });
             }
 
             navItinerary.addEventListener('click', () => switchTab('itinerary'));
             navFoodie.addEventListener('click', () => switchTab('foodie'));
+            navCoupon.addEventListener('click', () => switchTab('coupon'));
 
 
             // --- Initial Render ---
@@ -557,6 +705,7 @@
                 window.weatherByLocation = await fetchAllWeatherData(tripData.locations, tripData.itinerary);
                 renderItinerary(window.weatherByLocation);
                 renderFoodieList();
+                renderCoupons();
                 lucide.createIcons();
             }
 
