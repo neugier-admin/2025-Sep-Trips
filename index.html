@@ -47,8 +47,8 @@
             100% { transform: rotate(360deg); }
         }
         .loader-small {
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #3498db;
+            border: 2px solid #374151; /* dark:border-gray-700 */
+            border-top: 2px solid #60a5fa; /* dark:border-blue-400 */
             border-radius: 50%;
             width: 20px;
             height: 20px;
@@ -112,7 +112,14 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- (NEW) Application State Management ---
+            // Centralized state object to hold dynamic data like weather.
+            // This avoids polluting the global (window) scope and is a better practice.
+            const appState = {
+                weatherByLocation: {}
+            };
+
             // --- SVG Icon System ---
             function getIconSvg(name, options = {}) {
                 const { classes = 'w-6 h-6', strokeWidth = 2 } = options;
@@ -313,7 +320,6 @@
                 const card = document.createElement('div');
                 card.className = `flex items-center justify-between bg-gray-800 p-4 rounded-xl border border-gray-700 shadow-sm`;
 
-                // (FIXED) Combined title and tags into a single flex container for better alignment and compactness.
                 card.innerHTML = `
                     <div class="flex-grow pr-4">
                         <div class="flex items-baseline gap-3 flex-wrap">
@@ -331,7 +337,7 @@
                 return card;
             }
 
-            async function renderItinerary(weatherByLocation) {
+            function renderItinerary(weatherData) {
                 itineraryView.innerHTML = '';
                 const todayString = '2025-07-19';
                 let isHistorical = false;
@@ -346,22 +352,8 @@
                     
                     card.dataset.dayIndex = index;
                     
-                    let weatherHtml = '<div class="w-12 h-10 flex items-center justify-center"><div class="loader-small"></div></div>'; 
-                    const locationWeatherData = weatherByLocation[day.location];
-                    if(locationWeatherData) {
-                        if(locationWeatherData.type === 'historical') isHistorical = true;
-                        const dailyData = locationWeatherData.daily;
-                        if (dailyData && dailyData.time) {
-                            const weatherIndex = dailyData.time.findIndex(t => t.includes(day.date.substring(5)));
-                            if (weatherIndex !== -1) {
-                                const icon = getWeatherIcon(dailyData.weathercode[weatherIndex]);
-                                const maxTemp = Math.round(dailyData.temperature_2m_max[weatherIndex]);
-                                const minTemp = Math.round(dailyData.temperature_2m_min[weatherIndex]);
-                                weatherHtml = `<div class="text-right"><div class="text-2xl">${icon}</div><div class="text-xs text-gray-400">${minTemp}°/${maxTemp}° ${locationWeatherData.type === 'historical' ? '*' : ''}</div></div>`;
-                            }
-                        }
-                    }
-
+                    let weatherHtml = `<div id="weather-day-${index}" class="w-12 h-10 flex items-center justify-center"><div class="loader-small"></div></div>`; 
+                    
                     let noteIcon = '';
                     if (day.notes && day.notes.length > 0) {
                         noteIcon = getIconSvg('bell-ring', { classes: 'w-4 h-4 text-amber-600' });
@@ -381,14 +373,48 @@
                     `;
                     itineraryView.appendChild(card);
                 });
+                
+                // This will be populated later by updateWeatherUI
+                const historicalNoteContainer = document.createElement('div');
+                historicalNoteContainer.id = 'historical-note-container';
+                itineraryView.appendChild(historicalNoteContainer);
+            }
+            
+            // (NEW) This function updates the weather UI after the data is fetched.
+            function updateWeatherUI(weatherByLocation) {
+                let isHistorical = false;
+                tripData.itinerary.forEach((day, index) => {
+                    const weatherEl = document.getElementById(`weather-day-${index}`);
+                    if (!weatherEl) return;
 
-                if(isHistorical){
-                    const historicalNote = document.createElement('p');
-                    historicalNote.className = "text-xs text-center text-gray-500 mt-4";
-                    historicalNote.textContent = "* 天氣資訊為去年同期數據，僅供參考。";
-                    itineraryView.appendChild(historicalNote);
+                    const locationWeatherData = weatherByLocation[day.location];
+                    if(locationWeatherData) {
+                        if(locationWeatherData.type === 'historical') isHistorical = true;
+                        const dailyData = locationWeatherData.daily;
+                        if (dailyData && dailyData.time) {
+                            const weatherIndex = dailyData.time.findIndex(t => t.includes(day.date.substring(5)));
+                            if (weatherIndex !== -1) {
+                                const icon = getWeatherIcon(dailyData.weathercode[weatherIndex]);
+                                const maxTemp = Math.round(dailyData.temperature_2m_max[weatherIndex]);
+                                const minTemp = Math.round(dailyData.temperature_2m_min[weatherIndex]);
+                                weatherEl.innerHTML = `<div class="text-right"><div class="text-2xl">${icon}</div><div class="text-xs text-gray-400">${minTemp}°/${maxTemp}° ${locationWeatherData.type === 'historical' ? '*' : ''}</div></div>`;
+                            } else {
+                                weatherEl.innerHTML = `<div>-</div>`;
+                            }
+                        } else {
+                             weatherEl.innerHTML = `<div>-</div>`;
+                        }
+                    } else {
+                        weatherEl.innerHTML = `<div>-</div>`;
+                    }
+                });
+
+                const historicalNoteContainer = document.getElementById('historical-note-container');
+                if(isHistorical && historicalNoteContainer){
+                    historicalNoteContainer.innerHTML = `<p class="text-xs text-center text-gray-500 mt-4">* 天氣資訊為去年同期數據，僅供參考。</p>`;
                 }
             }
+
 
             function renderDetailPage(dayIndex, weatherByLocation) {
                 const dayData = tripData.itinerary[dayIndex];
@@ -559,8 +585,8 @@
             }
 
             // --- Page Navigation ---
-            function showDetailPage(dayIndex, weatherByLocation) {
-                renderDetailPage(dayIndex, weatherByLocation);
+            function showDetailPage(dayIndex) {
+                renderDetailPage(dayIndex, appState.weatherByLocation);
                 detailPage.classList.remove('page-hidden');
                 mainPageWrapper.classList.add('hidden');
             }
@@ -651,82 +677,97 @@
             }
 
 
-            // --- Event Listeners ---
-            itineraryView.addEventListener('click', (e) => {
-                const card = e.target.closest('[data-day-index]');
-                if (card) {
-                    showDetailPage(card.dataset.dayIndex, window.weatherByLocation);
-                }
-            });
+            // --- (NEW) Centralized Event Listener Setup ---
+            function setupEventListeners() {
+                const appContainer = document.getElementById('app-container');
 
-            detailPage.addEventListener('click', (e) => {
-                if (e.target.closest('#back-button')) {
-                    hideDetailPage();
-                }
-            });
-
-            couponView.addEventListener('click', (e) => {
-                const card = e.target.closest('.coupon-card');
-                if (card) {
-                    const url = card.dataset.finalUrl;
-                    const isImageUrl = /\.(jpeg|jpg|gif|png|webp|pdf)(\?.*)?$/i.test(url);
-                    if (isImageUrl) {
-                        couponModal.querySelector('#modal-coupon-image').src = url;
-                        couponModal.classList.remove('hidden');
-                    } else {
-                        window.open(url, '_blank');
+                appContainer.addEventListener('click', (e) => {
+                    // Itinerary Card Click
+                    const itineraryCard = e.target.closest('[data-day-index]');
+                    if (itineraryCard) {
+                        showDetailPage(itineraryCard.dataset.dayIndex);
+                        return;
                     }
-                }
-            });
 
-            couponModal.addEventListener('click', (e) => {
-                if (e.target.closest('#modal-close-button') || e.target === couponModal) {
-                    couponModal.classList.add('hidden');
-                }
-            });
-            
-            function switchTab(activeTab) {
-                const views = { itinerary: itineraryView, foodie: foodieView, coupon: couponView };
-                Object.keys(views).forEach(key => {
-                    const button = navContainer.querySelector(`#nav-${key}`);
-                    const view = views[key];
-                    if (key === activeTab) {
-                        view.classList.remove('hidden');
-                        button.classList.add('text-blue-400');
-                        button.classList.remove('text-gray-400');
-                    } else {
-                        view.classList.add('hidden');
-                        button.classList.add('text-gray-400');
-                        button.classList.remove('text-blue-400');
+                    // Detail Page Back Button
+                    if (e.target.closest('#back-button')) {
+                        hideDetailPage();
+                        return;
+                    }
+
+                    // Coupon Card Click
+                    const couponCard = e.target.closest('.coupon-card');
+                    if (couponCard) {
+                        const url = couponCard.dataset.finalUrl;
+                        const isImageUrl = /\.(jpeg|jpg|gif|png|webp|pdf)(\?.*)?$/i.test(url);
+                        if (isImageUrl) {
+                            couponModal.querySelector('#modal-coupon-image').src = url;
+                            couponModal.classList.remove('hidden');
+                        } else {
+                            window.open(url, '_blank');
+                        }
+                        return;
+                    }
+                    
+                    // Coupon Modal Close
+                    if (e.target.closest('#modal-close-button') || e.target === couponModal) {
+                        couponModal.classList.add('hidden');
+                        return;
+                    }
+
+                    // AI Suggestions Button
+                    const aiButton = e.target.closest('#get-ai-suggestions');
+                    if (aiButton) {
+                        getAiFoodSuggestions();
+                        return;
+                    }
+
+                    // Bottom Navigation
+                    const navButton = e.target.closest('button');
+                    if (navButton && navContainer.contains(navButton)) {
+                        const views = { itinerary: itineraryView, foodie: foodieView, coupon: couponView };
+                        let activeTab = null;
+                        if (navButton.id === 'nav-itinerary') activeTab = 'itinerary';
+                        if (navButton.id === 'nav-foodie') activeTab = 'foodie';
+                        if (navButton.id === 'nav-coupon') activeTab = 'coupon';
+
+                        if (activeTab) {
+                            Object.keys(views).forEach(key => {
+                                const button = navContainer.querySelector(`#nav-${key}`);
+                                const view = views[key];
+                                if (key === activeTab) {
+                                    view.classList.remove('hidden');
+                                    button.classList.add('text-blue-400');
+                                    button.classList.remove('text-gray-400');
+                                } else {
+                                    view.classList.add('hidden');
+                                    button.classList.add('text-gray-400');
+                                    button.classList.remove('text-blue-400');
+                                }
+                            });
+                        }
                     }
                 });
             }
 
-            navContainer.addEventListener('click', (e) => {
-                const button = e.target.closest('button');
-                if (!button) return;
-                if (button.id === 'nav-itinerary') switchTab('itinerary');
-                if (button.id === 'nav-foodie') switchTab('foodie');
-                if (button.id === 'nav-coupon') switchTab('coupon');
-            });
-            
-            foodieView.addEventListener('click', (e) => {
-                const aiButton = e.target.closest('#get-ai-suggestions');
-                if (aiButton) {
-                    getAiFoodSuggestions();
-                }
-            });
-
             // --- Initial Render ---
-            async function initialize() {
+            function initialize() {
                 mainTitle.textContent = tripData.tripTitle;
                 renderStaticComponents();
                 
-                window.weatherByLocation = await fetchAllWeatherData(tripData.locations, tripData.itinerary);
-                
-                renderItinerary(window.weatherByLocation);
+                // Render content first for instant UI
+                renderItinerary();
                 renderFoodieList();
                 renderCoupons();
+
+                // Setup all event listeners
+                setupEventListeners();
+
+                // Fetch weather in the background and update UI when done
+                fetchAllWeatherData(tripData.locations, tripData.itinerary).then(weatherData => {
+                    appState.weatherByLocation = weatherData;
+                    updateWeatherUI(weatherData);
+                });
             }
 
             initialize();
