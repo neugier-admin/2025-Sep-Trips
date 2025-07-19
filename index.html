@@ -5,7 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的大阪之旅 2025</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
+    <!-- Chosen Palette: Calm Blue & Neutral Gray -->
+    <!-- Application Structure Plan: The application is a two-layer single-page app (SPA). The main page acts as a dashboard, offering a high-level overview of the trip (daily themes) and a task-oriented "Foodie Checklist". This encourages exploration without overwhelming the user. Clicking a day card drills down into a detailed timeline view, which slides in from the right—a common and intuitive mobile navigation pattern. This layered structure presents information contextually, making it highly usable on the go. -->
+    <!-- Visualization & Content Choices: The source report is a detailed travel itinerary. The goal is organization, quick access to information, and task management. 
+         - Daily Itinerary -> Goal: Organize/Inform. Method: Clickable Cards (HTML/Tailwind). Interaction: Tap to drill-down. Justification: Provides a scannable, high-level summary. Cards are an excellent touch target for mobile users.
+         - Detailed Timeline -> Goal: Organize/Inform. Method: Vertical Timeline (HTML/Tailwind). Interaction: Scroll, click map links. Justification: Chronological presentation is the most intuitive way to view a schedule. Integrating actionable transport info and map links directly into each step makes the app a practical tool.
+         - (UPGRADED) Foodie Section -> Goal: Discovery/Personalization. Method: Gemini API Integration (JS). Interaction: Click "AI Suggest" button. Justification: Adds a dynamic, intelligent feature that provides personalized, non-seafood restaurant recommendations based on the user's existing list, enhancing the trip's culinary discovery aspect.
+         - (REMOVED) Dark Mode Toggle -> Goal: Stability/Simplicity. Method: Removed JS toggle, hardcoded 'dark' class. Justification: Per user request, this removes the buggy toggle feature and sets the app to a permanent dark theme for a consistent experience.
+         - Icon System -> Goal: Decoupling/Performance. Method: Inline SVG function (JS). Interaction: None (internal). Justification: Removes external library dependency, improves performance, and makes the codebase more robust and ready for future framework migration (e.g., to React/TSX).
+         - Library/Method: All elements are implemented using HTML, Tailwind CSS, and Vanilla JavaScript for a lightweight and fast experience. Icons are now self-contained. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
